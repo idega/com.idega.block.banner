@@ -10,21 +10,9 @@
             <value>
               <map>
                 <key>
-                  <name>component_name</name>
+                  <name>component_property_file</name>
                   <type>java.lang.String</type>
-                  <value>BannerEntity</value>
-                </key>
-                <key>
-                  <name>component_type</name>
-                  <type>java.lang.String</type>
-                  <value>iw.data</value>
-                </key>
-                <key>
-                  <name>iw_component_methods</name>
-                  <value>
-                    <map />
-                  </value>
-                  <type>map</type>
+                  <value>com.idega.block.banner.data.BannerEntity.pxml</value>
                 </key>
               </map>
             </value>
@@ -35,21 +23,9 @@
             <value>
               <map>
                 <key>
-                  <name>component_name</name>
+                  <name>component_property_file</name>
                   <type>java.lang.String</type>
-                  <value>AdEntity</value>
-                </key>
-                <key>
-                  <name>component_type</name>
-                  <type>java.lang.String</type>
-                  <value>iw.data</value>
-                </key>
-                <key>
-                  <name>iw_component_methods</name>
-                  <value>
-                    <map />
-                  </value>
-                  <type>map</type>
+                  <value>com.idega.block.banner.data.AdEntity.pxml</value>
                 </key>
               </map>
             </value>
@@ -60,21 +36,9 @@
             <value>
               <map>
                 <key>
-                  <name>component_name</name>
+                  <name>component_property_file</name>
                   <type>java.lang.String</type>
-                  <value>Banner</value>
-                </key>
-                <key>
-                  <name>component_type</name>
-                  <type>java.lang.String</type>
-                  <value>iw.block</value>
-                </key>
-                <key>
-                  <name>iw_component_methods</name>
-                  <value>
-                    <map />
-                  </value>
-                  <type>map</type>
+                  <value>com.idega.block.banner.presentation.Banner.pxml</value>
                 </key>
               </map>
             </value>
