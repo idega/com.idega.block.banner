@@ -1,14 +1,18 @@
-#Mon May 06 00:19:22 GMT+00:00 2002
+Mobile_phone=Fars\u00EDmi
+ad=Augl\u00FDsing
+banner_admin=Augl\u00FDsingastj\u00F3ri
+close=Loka
+create=Stofna
+delete=Ey\u00F0a
+detach=Fjarl\u00E6gja
+edit=Breyta
+iw.component.com.idega.block.banner.presentation.Banner.name=Augl\u00FDsing
 max_hits=H\u00E1marksfj\u00F6ldi smella
-url=URL
+max_impressions=H\u00E1marksfj\u00F6ldi s\u00FDninga
 name=Nafn
-valid_from=Gildir fr\u00E1
 new_image=N\u00FD mynd
 no_access=Engin r\u00E9ttindi\!
 save=Vista
-iw.component.com.idega.block.banner.presentation.Banner.name=Augl\u00FDsing
+url=URL
+valid_from=Gildir fr\u00E1
 valid_to=Gildir til
-max_impressions=H\u00E1marksfj\u00F6ldi s\u00FDninga
-banner_admin=Augl\u00FDsingastj\u00F3ri
-ad=Augl\u00FDsing
-close=Loka
