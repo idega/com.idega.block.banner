@@ -11,6 +11,7 @@ import com.idega.core.component.business.ICObjectBusiness;
 import com.idega.core.component.data.ICObjectInstance;
 import com.idega.core.file.data.ICFile;
 import com.idega.data.EntityFinder;
+import com.idega.data.GenericEntity;
 import com.idega.data.IDOLookupException;
 
 /**
@@ -26,7 +27,7 @@ public class BannerFinder {
 
   public static BannerEntity getBanner(String attribute){
     try {
-      List L = EntityFinder.findAllByColumn(com.idega.block.banner.data.BannerEntityBMPBean.getStaticInstance(BannerEntity.class),com.idega.block.banner.data.BannerEntityBMPBean.getColumnNameAttribute(),attribute);
+      List L = EntityFinder.findAllByColumn(GenericEntity.getStaticInstance(BannerEntity.class),com.idega.block.banner.data.BannerEntityBMPBean.getColumnNameAttribute(),attribute);
       if(L!= null) {
         return (BannerEntity) L.get(0);
       }
@@ -62,8 +63,8 @@ public class BannerFinder {
     try {
       List list = null;
       if ( banner != null )
-        list = EntityFinder.findRelated(banner,com.idega.block.banner.data.AdEntityBMPBean.getStaticInstance(AdEntity.class));
-      List userList = EntityFinder.findAllByColumn(com.idega.block.banner.data.AdEntityBMPBean.getStaticInstance(AdEntity.class),com.idega.block.banner.data.AdEntityBMPBean.getColumnNameUserID(),userID);
+        list = EntityFinder.findRelated(banner,GenericEntity.getStaticInstance(AdEntity.class));
+      List userList = EntityFinder.findAllByColumn(GenericEntity.getStaticInstance(AdEntity.class),com.idega.block.banner.data.AdEntityBMPBean.getColumnNameUserID(),userID);
       if ( userList != null ) {
         if ( list != null ) {
           for ( int a = 0; a < list.size(); a++ ) {
@@ -88,7 +89,7 @@ public class BannerFinder {
 
   public static AdEntity[] getAdsInBanner(BannerEntity banner) {
     try {
-      AdEntity[] ads = (AdEntity[]) banner.findRelated(com.idega.block.banner.data.AdEntityBMPBean.getStaticInstance(AdEntity.class));
+      AdEntity[] ads = (AdEntity[]) banner.findRelated(GenericEntity.getStaticInstance(AdEntity.class));
       if ( ads != null ) {
         return ads;
       }
@@ -101,7 +102,7 @@ public class BannerFinder {
 
   public static List getAds(BannerEntity banner) {
     try {
-      return EntityFinder.findRelated(banner,com.idega.block.banner.data.AdEntityBMPBean.getStaticInstance(AdEntity.class));
+      return EntityFinder.findRelated(banner,GenericEntity.getStaticInstance(AdEntity.class));
     }
     catch (Exception e) {
       return null;
@@ -122,7 +123,7 @@ public class BannerFinder {
 
   public static ICFile[] getFilesInAd(AdEntity ad) {
     try {
-      ICFile[] files = (ICFile[]) ad.findRelated(com.idega.core.file.data.ICFileBMPBean.getStaticInstance(ICFile.class));
+      ICFile[] files = (ICFile[]) ad.findRelated(GenericEntity.getStaticInstance(ICFile.class));
       if ( files != null ) {
         return files;
       }
