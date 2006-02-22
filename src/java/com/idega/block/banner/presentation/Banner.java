@@ -2,14 +2,12 @@ package com.idega.block.banner.presentation;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.idega.block.banner.business.BannerBusiness;
 import com.idega.block.banner.business.BannerFinder;
 import com.idega.block.banner.business.BannerListener;
 import com.idega.block.banner.data.AdEntity;
 import com.idega.block.banner.data.BannerEntity;
 import com.idega.core.component.data.ICObjectInstance;
-import com.idega.core.localisation.business.ICLocaleBusiness;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.block.presentation.Builderaware;
@@ -30,8 +28,6 @@ public class Banner extends Block implements Builderaware {
 	private boolean _isAdmin = false;
 
 	private String _attribute;
-
-	private int _iLocaleID;
 
 	private final static String IW_BUNDLE_IDENTIFIER = "com.idega.block.banner";
 
@@ -88,8 +84,6 @@ public class Banner extends Block implements Builderaware {
 		_iwb = getBundle(iwc);
 
 		_isAdmin = iwc.hasEditPermission(this);
-
-		_iLocaleID = ICLocaleBusiness.getLocaleId(iwc.getCurrentLocale());
 
 		BannerEntity banner = null;
 

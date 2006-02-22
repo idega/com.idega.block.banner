@@ -31,17 +31,10 @@ public class BannerEditorWindow extends IWAdminWindow{
 
 private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.banner";
 private boolean _isAdmin = false;
-private boolean _superAdmin = false;
 private boolean _update = false;
-private boolean _save = false;
-private int _iObjInsId = -1;
-
 private int _bannerID = -1;
 private int _adID = -1;
 private int _userID = -1;
-private boolean _newObjInst = false;
-private String _newWithAttribute;
-private Image _editImage;
 private Image _createImage;
 private Image _deleteImage;
 private Image _detachImage;
@@ -61,7 +54,6 @@ public BannerEditorWindow(){
      * @todo permission
      */
     _isAdmin = true;
-    _superAdmin = iwc.hasEditPermission(this);
     _iwb = iwc.getIWMainApplication().getBundle(Builderaware.IW_CORE_BUNDLE_IDENTIFIER);
     _iwrb = getResourceBundle(iwc);
     addTitle(_iwrb.getLocalizedString("banner_admin","Banner Admin"));
@@ -73,16 +65,8 @@ public BannerEditorWindow(){
       _userID = -1;
     }
 
-
-    _editImage = _iwb.getImage("shared/edit.gif",_iwrb.getLocalizedString("edit","Edit"));
-      //_editImage.setHorizontalSpacing(4);
-      //_editImage.setVerticalSpacing(3);
     _createImage = _iwb.getImage("shared/create.gif",_iwrb.getLocalizedString("create","Create"));
-      //_createImage.setHorizontalSpacing(4);
-      //_createImage.setVerticalSpacing(3);
     _deleteImage = _iwb.getImage("shared/delete.gif",_iwrb.getLocalizedString("delete","Delete"));
-      //_deleteImage.setHorizontalSpacing(4);
-      //_deleteImage.setVerticalSpacing(3);
     _detachImage = _iwb.getImage("shared/detach.gif",_iwrb.getLocalizedString("detach","Detach"));
 
     if ( _isAdmin ) {
