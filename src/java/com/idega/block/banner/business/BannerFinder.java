@@ -62,14 +62,16 @@ public class BannerFinder {
   public static List getAdsInBanner(BannerEntity banner,int userID) {
     try {
       List list = null;
-      if ( banner != null )
-        list = EntityFinder.findRelated(banner,GenericEntity.getStaticInstance(AdEntity.class));
+      if ( banner != null ) {
+				list = EntityFinder.findRelated(banner,GenericEntity.getStaticInstance(AdEntity.class));
+			}
       List userList = EntityFinder.findAllByColumn(GenericEntity.getStaticInstance(AdEntity.class),com.idega.block.banner.data.AdEntityBMPBean.getColumnNameUserID(),userID);
       if ( userList != null ) {
         if ( list != null ) {
           for ( int a = 0; a < list.size(); a++ ) {
-            if ( !userList.contains(list.get(a)) )
-              userList.add(list.get(a));
+            if ( !userList.contains(list.get(a)) ) {
+							userList.add(list.get(a));
+						}
           }
         }
         return userList;
@@ -167,8 +169,9 @@ public class BannerFinder {
       if(L!= null){
         return ((ICObjectInstance) L.get(0)).getID();
       }
-      else
-        return -1;
+			else {
+				return -1;
+			}
     }
     catch (SQLException ex) {
       ex.printStackTrace();

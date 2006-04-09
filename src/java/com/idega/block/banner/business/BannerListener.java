@@ -19,8 +19,9 @@ public class BannerListener implements IWPageEventListener{
 
   public boolean actionPerformed(IWContext iwc){
     String mode = iwc.getParameter(BannerBusiness.PARAMETER_MODE);
-    if ( mode == null )
-      mode = "";
+    if ( mode == null ) {
+			mode = "";
+		}
 
     if ( mode.equalsIgnoreCase(BannerBusiness.PARAMETER_CLICKED) ) {
       String adID = iwc.getParameter(BannerBusiness.PARAMETER_AD_ID);
