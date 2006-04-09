@@ -14,9 +14,6 @@ import com.idega.event.IWPageEventListener;
 
 public class BannerListener implements IWPageEventListener{
 
-  public BannerListener() {
-  }
-
   public boolean actionPerformed(IWContext iwc){
     String mode = iwc.getParameter(BannerBusiness.PARAMETER_MODE);
     if ( mode == null ) {
