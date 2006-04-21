@@ -2,6 +2,7 @@ package com.idega.block.banner.presentation;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import com.idega.block.banner.business.BannerBusiness;
 import com.idega.block.banner.business.BannerFinder;
 import com.idega.block.banner.business.BannerListener;
@@ -136,7 +137,7 @@ public class Banner extends Block implements Builderaware {
 
 			if (banner != null) {
 
-				this._bannerID = banner.getID();
+				this._bannerID = new Integer(banner.getPrimaryKey().toString()).intValue();
 
 			}
 
@@ -152,7 +153,7 @@ public class Banner extends Block implements Builderaware {
 
 		if (this._newWithAttribute) {
 
-			this._bannerID = BannerFinder.getBanner(this._attribute).getID();
+			this._bannerID = new Integer(BannerFinder.getBanner(this._attribute).getPrimaryKey().toString()).intValue();
 
 		}
 
@@ -225,7 +226,7 @@ public class Banner extends Block implements Builderaware {
 
 				bannerLink.addParameter(BannerBusiness.PARAMETER_MODE, BannerBusiness.PARAMETER_CLICKED);
 
-				bannerLink.addParameter(BannerBusiness.PARAMETER_AD_ID, ad.getID());
+				bannerLink.addParameter(BannerBusiness.PARAMETER_AD_ID, ad.getPrimaryKey().toString());
 
 				bannerLink.setEventListener(BannerListener.class);
 

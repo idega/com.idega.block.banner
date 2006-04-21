@@ -1,49 +1,30 @@
 package com.idega.block.banner.data;
 
 
-public class AdEntityHomeImpl extends com.idega.data.IDOFactory implements AdEntityHome
-{
- protected Class getEntityInterfaceClass(){
-  return AdEntity.class;
- }
+import java.util.Collection;
+import javax.ejb.CreateException;
+import javax.ejb.FinderException;
+import com.idega.data.IDOEntity;
+import com.idega.data.IDOFactory;
 
+public class AdEntityHomeImpl extends IDOFactory implements AdEntityHome {
 
- public AdEntity create() throws javax.ejb.CreateException{
-  return (AdEntity) super.createIDO();
- }
-
-
- public AdEntity createLegacy(){
-	try{
-		return create();
-	}
-	catch(javax.ejb.CreateException ce){
-		throw new RuntimeException("CreateException:"+ce.getMessage());
+	public Class getEntityInterfaceClass() {
+		return AdEntity.class;
 	}
 
- }
-
-
- public AdEntity findByPrimaryKey(Object pk) throws javax.ejb.FinderException{
-  return (AdEntity) super.findByPrimaryKeyIDO(pk);
- }
-
-
- public AdEntity findByPrimaryKey(int id) throws javax.ejb.FinderException{
-  return (AdEntity) super.findByPrimaryKeyIDO(id);
- }
-
-
- public AdEntity findByPrimaryKeyLegacy(int id) throws java.sql.SQLException{
-	try{
-		return findByPrimaryKey(id);
-	}
-	catch(javax.ejb.FinderException fe){
-		throw new java.sql.SQLException(fe.getMessage());
+	public AdEntity create() throws CreateException {
+		return (AdEntity) super.createIDO();
 	}
 
- }
+	public AdEntity findByPrimaryKey(Object pk) throws FinderException {
+		return (AdEntity) super.findByPrimaryKeyIDO(pk);
+	}
 
-
-
+	public Collection findAllByUser(int userID) throws FinderException {
+		IDOEntity entity = this.idoCheckOutPooledEntity();
+		Collection ids = ((AdEntityBMPBean) entity).ejbFindAllByUser(userID);
+		this.idoCheckInPooledEntity(entity);
+		return this.getEntityCollectionForPrimaryKeys(ids);
+	}
 }

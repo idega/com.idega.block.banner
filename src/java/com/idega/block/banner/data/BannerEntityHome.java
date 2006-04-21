@@ -1,12 +1,18 @@
 package com.idega.block.banner.data;
 
 
-public interface BannerEntityHome extends com.idega.data.IDOHome
-{
- public BannerEntity create() throws javax.ejb.CreateException;
- public BannerEntity createLegacy();
- public BannerEntity findByPrimaryKey(int id) throws javax.ejb.FinderException;
- public BannerEntity findByPrimaryKey(Object pk) throws javax.ejb.FinderException;
- public BannerEntity findByPrimaryKeyLegacy(int id) throws java.sql.SQLException;
+import javax.ejb.CreateException;
+import com.idega.data.IDOHome;
+import javax.ejb.FinderException;
 
+public interface BannerEntityHome extends IDOHome {
+
+	public BannerEntity create() throws CreateException;
+
+	public BannerEntity findByPrimaryKey(Object pk) throws FinderException;
+
+	/**
+	 * @see com.idega.block.banner.data.BannerEntityBMPBean#ejbFindByAttribute
+	 */
+	public BannerEntity findByAttribute(String attribute) throws FinderException;
 }

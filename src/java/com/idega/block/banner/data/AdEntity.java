@@ -1,27 +1,128 @@
 package com.idega.block.banner.data;
 
 
-public interface AdEntity extends com.idega.data.IDOLegacyEntity
-{
- public java.lang.String getAdName();
- public java.sql.Timestamp getBeginDate();
- public java.sql.Timestamp getEndDate();
- public int getHits();
- public java.lang.String getIDColumnName();
- public int getImpressions();
- public int getMaxHits();
- public int getMaxImpressions();
- public java.util.Collection getRelatedFiles()throws com.idega.data.IDORelationshipException;
- public java.lang.String getURL();
- public int getUserID();
- public void initializeAttributes();
- public void setAdName(java.lang.String p0);
- public void setBeginDate(java.sql.Timestamp p0);
- public void setEndDate(java.sql.Timestamp p0);
- public void setHits(int p0);
- public void setImpressions(int p0);
- public void setMaxHits(int p0);
- public void setMaxImpressions(int p0);
- public void setURL(java.lang.String p0);
- public void setUserID(int p0);
+import com.idega.core.file.data.ICFile;
+import com.idega.data.IDOAddRelationshipException;
+import com.idega.data.IDORelationshipException;
+import java.util.Collection;
+import com.idega.data.IDORemoveRelationshipException;
+import java.sql.Timestamp;
+import com.idega.data.IDOEntity;
+
+public interface AdEntity extends IDOEntity {
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getUserID
+	 */
+	public int getUserID();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getAdName
+	 */
+	public String getAdName();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getHits
+	 */
+	public int getHits();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getMaxHits
+	 */
+	public int getMaxHits();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getImpressions
+	 */
+	public int getImpressions();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getMaxImpressions
+	 */
+	public int getMaxImpressions();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getBeginDate
+	 */
+	public Timestamp getBeginDate();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getEndDate
+	 */
+	public Timestamp getEndDate();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getURL
+	 */
+	public String getURL();
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setUserID
+	 */
+	public void setUserID(int userID);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setAdName
+	 */
+	public void setAdName(String adName);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setHits
+	 */
+	public void setHits(int hits);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setMaxHits
+	 */
+	public void setMaxHits(int maxHits);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setImpressions
+	 */
+	public void setImpressions(int impressions);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setMaxImpressions
+	 */
+	public void setMaxImpressions(int maxImpressions);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setBeginDate
+	 */
+	public void setBeginDate(Timestamp beginDate);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setEndDate
+	 */
+	public void setEndDate(Timestamp endDate);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#setURL
+	 */
+	public void setURL(String URL);
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#addFile
+	 */
+	public void addFile(ICFile file) throws IDOAddRelationshipException;
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#removeFile
+	 */
+	public void removeFile(ICFile file) throws IDORemoveRelationshipException;
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#removeFiles
+	 */
+	public void removeFiles() throws IDORemoveRelationshipException;
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#removeBanners
+	 */
+	public void removeBanners() throws IDORemoveRelationshipException;
+
+	/**
+	 * @see com.idega.block.banner.data.AdEntityBMPBean#getFiles
+	 */
+	public Collection getFiles() throws IDORelationshipException;
 }

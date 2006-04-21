@@ -3,6 +3,8 @@ package com.idega.block.banner.presentation;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Iterator;
 
 import com.idega.block.banner.business.BannerBusiness;
 import com.idega.block.banner.business.BannerFinder;
@@ -234,7 +236,7 @@ public BannerEditorWindow(){
     addRight(this._iwrb.getLocalizedString("new_image","New image")+":",image,true,false);
 
     if ( ad != null ) {
-      ICFile[] files = BannerFinder.getFilesInAd(ad);
+      Collection files = BannerFinder.getFilesInAd(ad);
       if ( files != null ) {
         Table filesTable = new Table();
           filesTable.setWidth("100%");
@@ -244,9 +246,12 @@ public BannerEditorWindow(){
         Image fileImage;
         Link deleteFile;
 
-        for ( int a = 0; a < files.length; a++ ) {
+        Iterator iter = files.iterator();
+        int a = 0;
+				while (iter.hasNext()) {
+					ICFile file = (ICFile) iter.next();
           try {
-            fileImage = new Image(((Integer)files[a].getPrimaryKey()).intValue());
+            fileImage = new Image(((Integer)file.getPrimaryKey()).intValue());
           }
           catch (Exception e) {
             fileImage = new Image();
@@ -257,11 +262,12 @@ public BannerEditorWindow(){
           deleteFile = new Link(this._deleteImage);
             deleteFile.addParameter(BannerBusiness.PARAMETER_BANNER_ID,this._bannerID);
             deleteFile.addParameter(BannerBusiness.PARAMETER_AD_ID,this._adID);
-            deleteFile.addParameter(BannerBusiness.PARAMETER_FILE_ID,files[a].getPrimaryKey().toString());
+            deleteFile.addParameter(BannerBusiness.PARAMETER_FILE_ID,file.getPrimaryKey().toString());
             deleteFile.addParameter(BannerBusiness.PARAMETER_DELETE_FILE,BannerBusiness.PARAMETER_TRUE);
 
           filesTable.add(deleteFile,1,a+1);
           filesTable.add(fileImage,2,a+1);
+          a++;
         }
 
         filesTable.setColumnVerticalAlignment(1,"top");
