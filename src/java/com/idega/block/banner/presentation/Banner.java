@@ -32,8 +32,6 @@ public class Banner extends Block implements Builderaware {
 
 	private final static String IW_BUNDLE_IDENTIFIER = "com.idega.block.banner";
 
-	private final static String IW_CORE_BUNDLE_IDENTIFIER = "com.idega.core";
-
 	protected IWResourceBundle _iwrb;
 
 	protected IWBundle _iwb;
