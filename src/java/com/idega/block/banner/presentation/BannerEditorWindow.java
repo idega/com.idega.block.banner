@@ -3,8 +3,6 @@ package com.idega.block.banner.presentation;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Iterator;
 
 import com.idega.block.banner.business.BannerBusiness;
 import com.idega.block.banner.business.BannerFinder;
@@ -14,6 +12,7 @@ import com.idega.block.media.presentation.ImageInserter;
 import com.idega.core.accesscontrol.business.LoginBusinessBean;
 import com.idega.core.file.data.ICFile;
 import com.idega.idegaweb.IWBundle;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.block.presentation.Builderaware;
 import com.idega.idegaweb.presentation.IWAdminWindow;
@@ -33,10 +32,17 @@ public class BannerEditorWindow extends IWAdminWindow{
 
 private final static String IW_BUNDLE_IDENTIFIER="com.idega.block.banner";
 private boolean _isAdmin = false;
+private boolean _superAdmin = false;
 private boolean _update = false;
+private boolean _save = false;
+private int _iObjInsId = -1;
+
 private int _bannerID = -1;
 private int _adID = -1;
 private int _userID = -1;
+private boolean _newObjInst = false;
+private String _newWithAttribute;
+private Image _editImage;
 private Image _createImage;
 private Image _deleteImage;
 private Image _detachImage;
@@ -56,6 +62,7 @@ public BannerEditorWindow(){
      * @todo permission
      */
     this._isAdmin = true;
+    this._superAdmin = iwc.hasEditPermission(this);
     this._iwb = iwc.getIWMainApplication().getBundle(Builderaware.IW_CORE_BUNDLE_IDENTIFIER);
     this._iwrb = getResourceBundle(iwc);
     addTitle(this._iwrb.getLocalizedString("banner_admin","Banner Admin"));
@@ -67,8 +74,16 @@ public BannerEditorWindow(){
       this._userID = -1;
     }
 
+
+    this._editImage = this._iwb.getImage("shared/edit.gif",this._iwrb.getLocalizedString("edit","Edit"));
+      //_editImage.setHorizontalSpacing(4);
+      //_editImage.setVerticalSpacing(3);
     this._createImage = this._iwb.getImage("shared/create.gif",this._iwrb.getLocalizedString("create","Create"));
+      //_createImage.setHorizontalSpacing(4);
+      //_createImage.setVerticalSpacing(3);
     this._deleteImage = this._iwb.getImage("shared/delete.gif",this._iwrb.getLocalizedString("delete","Delete"));
+      //_deleteImage.setHorizontalSpacing(4);
+      //_deleteImage.setVerticalSpacing(3);
     this._detachImage = this._iwb.getImage("shared/detach.gif",this._iwrb.getLocalizedString("detach","Detach"));
 
     if ( this._isAdmin ) {
@@ -236,7 +251,7 @@ public BannerEditorWindow(){
     addRight(this._iwrb.getLocalizedString("new_image","New image")+":",image,true,false);
 
     if ( ad != null ) {
-      Collection files = BannerFinder.getFilesInAd(ad);
+      ICFile[] files = BannerFinder.getFilesInAd(ad);
       if ( files != null ) {
         Table filesTable = new Table();
           filesTable.setWidth("100%");
@@ -246,12 +261,9 @@ public BannerEditorWindow(){
         Image fileImage;
         Link deleteFile;
 
-        Iterator iter = files.iterator();
-        int a = 0;
-				while (iter.hasNext()) {
-					ICFile file = (ICFile) iter.next();
+        for ( int a = 0; a < files.length; a++ ) {
           try {
-            fileImage = new Image(((Integer)file.getPrimaryKey()).intValue());
+            fileImage = new Image(((Integer)files[a].getPrimaryKey()).intValue());
           }
           catch (Exception e) {
             fileImage = new Image();
@@ -262,12 +274,11 @@ public BannerEditorWindow(){
           deleteFile = new Link(this._deleteImage);
             deleteFile.addParameter(BannerBusiness.PARAMETER_BANNER_ID,this._bannerID);
             deleteFile.addParameter(BannerBusiness.PARAMETER_AD_ID,this._adID);
-            deleteFile.addParameter(BannerBusiness.PARAMETER_FILE_ID,file.getPrimaryKey().toString());
+            deleteFile.addParameter(BannerBusiness.PARAMETER_FILE_ID,files[a].getPrimaryKey().toString());
             deleteFile.addParameter(BannerBusiness.PARAMETER_DELETE_FILE,BannerBusiness.PARAMETER_TRUE);
 
           filesTable.add(deleteFile,1,a+1);
           filesTable.add(fileImage,2,a+1);
-          a++;
         }
 
         filesTable.setColumnVerticalAlignment(1,"top");
@@ -296,7 +307,7 @@ public BannerEditorWindow(){
   }
   
   private void clearCache(IWContext iwc) {
-    iwc.getIWMainApplication().getIWCacheManager().invalidateCache(Banner.CACHE_KEY);
+    IWMainApplication.getIWCacheManager().invalidateCache(Banner.CACHE_KEY);
   }
 
   private void newAd(IWContext iwc) {

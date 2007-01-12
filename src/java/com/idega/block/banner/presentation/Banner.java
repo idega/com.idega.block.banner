@@ -9,6 +9,7 @@ import com.idega.block.banner.business.BannerListener;
 import com.idega.block.banner.data.AdEntity;
 import com.idega.block.banner.data.BannerEntity;
 import com.idega.core.component.data.ICObjectInstance;
+import com.idega.core.localisation.business.ICLocaleBusiness;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.idegaweb.block.presentation.Builderaware;
@@ -30,7 +31,11 @@ public class Banner extends Block implements Builderaware {
 
 	private String _attribute;
 
+	private int _iLocaleID;
+
 	private final static String IW_BUNDLE_IDENTIFIER = "com.idega.block.banner";
+
+	private final static String IW_CORE_BUNDLE_IDENTIFIER = "com.idega.core";
 
 	protected IWResourceBundle _iwrb;
 
@@ -84,6 +89,8 @@ public class Banner extends Block implements Builderaware {
 
 		this._isAdmin = iwc.hasEditPermission(this);
 
+		this._iLocaleID = ICLocaleBusiness.getLocaleId(iwc.getCurrentLocale());
+
 		BannerEntity banner = null;
 
 		this._myTable = new Table(1, 2);
@@ -135,7 +142,7 @@ public class Banner extends Block implements Builderaware {
 
 			if (banner != null) {
 
-				this._bannerID = new Integer(banner.getPrimaryKey().toString()).intValue();
+				this._bannerID = banner.getID();
 
 			}
 
@@ -151,7 +158,7 @@ public class Banner extends Block implements Builderaware {
 
 		if (this._newWithAttribute) {
 
-			this._bannerID = new Integer(BannerFinder.getBanner(this._attribute).getPrimaryKey().toString()).intValue();
+			this._bannerID = BannerFinder.getBanner(this._attribute).getID();
 
 		}
 
@@ -224,7 +231,7 @@ public class Banner extends Block implements Builderaware {
 
 				bannerLink.addParameter(BannerBusiness.PARAMETER_MODE, BannerBusiness.PARAMETER_CLICKED);
 
-				bannerLink.addParameter(BannerBusiness.PARAMETER_AD_ID, ad.getPrimaryKey().toString());
+				bannerLink.addParameter(BannerBusiness.PARAMETER_AD_ID, ad.getID());
 
 				bannerLink.setEventListener(BannerListener.class);
 
