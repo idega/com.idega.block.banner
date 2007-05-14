@@ -84,6 +84,7 @@ public class BannerBusiness {
 			else {
 				banner.setAttribute("BLANK_VALUE");
 			}
+			banner.store();
 
 			if (!update) {
 				if (InstanceId > 0) {
@@ -91,7 +92,6 @@ public class BannerBusiness {
 					banner.addICObjectInstance(objIns);
 				}
 			}
-			banner.store();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -389,11 +389,9 @@ public class BannerBusiness {
 	public static void updateImpressions(IWContext iwc, AdEntity ad) {
 		if (notSeenBefore(iwc, new Integer(ad.getPrimaryKey().toString()).intValue())) {
 			/*
-			 * String cookieString = COOKIE_NAME+Integer.toString(ad.getID());
-			 * System.out.println(cookieString);
+			 * String cookieString = COOKIE_NAME+Integer.toString(ad.getID()); System.out.println(cookieString);
 			 * 
-			 * Cookie cookie = new Cookie(cookieString,"true"); cookie.setMaxAge(31 *
-			 * 24 * 60 * 60); cookie.setPath("/"); iwc.addCookies(cookie);
+			 * Cookie cookie = new Cookie(cookieString,"true"); cookie.setMaxAge(31 * 24 * 60 * 60); cookie.setPath("/"); iwc.addCookies(cookie);
 			 */
 
 			ad.setImpressions(ad.getImpressions() + 1);
@@ -403,17 +401,14 @@ public class BannerBusiness {
 
 	public static boolean notSeenBefore(IWContext iwc, int adID) {
 		/*
-		 * Cookie[] cookies = iwc.getCookies(); String cookieString =
-		 * COOKIE_NAME+adID;
+		 * Cookie[] cookies = iwc.getCookies(); String cookieString = COOKIE_NAME+adID;
 		 */
 
 		boolean returner = true;
 
 		/*
-		 * if (cookies != null && cookies.length > 0) { for (int i = 0 ; i <
-		 * cookies.length ; i++) { System.out.println("Cookie:
-		 * "+cookies[i].getName()+"="+cookies[i].getValue()); if (
-		 * cookies[i].getName().equals(cookieString) ) { returner = false; continue; } } }
+		 * if (cookies != null && cookies.length > 0) { for (int i = 0 ; i < cookies.length ; i++) { System.out.println("Cookie:
+		 * "+cookies[i].getName()+"="+cookies[i].getValue()); if ( cookies[i].getName().equals(cookieString) ) { returner = false; continue; } } }
 		 */
 
 		return returner;

@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>idegaWeb Banner Block</name>
   <artifactId>com.idega.block.banner</artifactId>
-  <currentVersion>3.1.0</currentVersion>
+  <currentVersion>3.1.1</currentVersion>
   <inceptionYear>2000</inceptionYear>
   <shortDescription>Banner</shortDescription>
   <versions>
@@ -18,6 +18,11 @@
       <id>3.1.0</id>
       <name>3.1.0</name>
       <tag>BANNER_3_1_0</tag>
+    </version>
+    <version>
+      <id>3.1.1</id>
+      <name>3.1.1</name>
+      <tag>BANNER_3_1_1</tag>
     </version>
   </versions>
   <branches/>

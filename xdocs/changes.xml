@@ -4,17 +4,24 @@
     <author email="tryggvi@idega.com">Tryggvi Larusson</author>
   </properties>
   <body>
+	<release version="3.1.1" date="2007-05-14">
+		<action dev="laddi" type="update">
+      		Added new block to display ads in a carousel (uses mootools based script).
+		</action>   
+	</release>   
+  
+
 	<release version="3.1.0" date="2006-06-26">
 		<action dev="tryggvil" type="update">
       		Version built to use on top of ePlatform 3.1 release
 		</action>   
 	</release>   
   
-      	<release version="1.0.1" date="2005-05-25">
+  	<release version="1.0.1" date="2005-05-25">
       <action dev="tryggvil" type="update">
         Declaration of version for use with 3.0.5 core.
       </action>   
-      </release>           
+	</release>           
 
   </body>
 </document>
