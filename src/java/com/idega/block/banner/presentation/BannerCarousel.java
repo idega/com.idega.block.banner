@@ -49,6 +49,12 @@ public class BannerCarousel extends Block implements Builderaware {
 	}
 
 	protected String getCacheState(IWContext iwc, String cacheStatePrefix) {
+		if (getParentPage() != null) {
+			getParentPage().addJavascriptURL(getBundle(iwc).getResourcesURL() + "/js/mootools.js");
+			getParentPage().addJavascriptURL(getBundle(iwc).getResourcesURL() + "/js/jd.gallery.js");
+			getParentPage().addStyleSheetURL(getBundle(iwc).getResourcesURL() + "/style/banner.css");
+		}
+
 		return cacheStatePrefix + this._bannerID;
 	}
 
@@ -56,12 +62,6 @@ public class BannerCarousel extends Block implements Builderaware {
 		this._iwrb = getResourceBundle(iwc);
 		this._iwb = getBundle(iwc);
 		this._isAdmin = iwc.hasEditPermission(this);
-
-		if (getParentPage() != null) {
-			getParentPage().addJavascriptURL(_iwb.getResourcesURL() + "/js/mootools.js");
-			getParentPage().addJavascriptURL(_iwb.getResourcesURL() + "/js/jd.gallery.js");
-			getParentPage().addStyleSheetURL(_iwb.getResourcesURL() + "/style/jd.gallery.css");
-		}
 
 		BannerEntity banner = null;
 
@@ -158,9 +158,9 @@ public class BannerCarousel extends Block implements Builderaware {
 		Layer layer = new Layer();
 		layer.setStyleClass("adminLayer");
 
-		Image createImage = iwc.getIWMainApplication().getBundle(IW_CORE_BUNDLE_IDENTIFIER).getImage("shared/create.gif");
+		// Image createImage = iwc.getIWMainApplication().getCoreBundle().getImage("shared/create.gif");
 
-		Link createLink = new Link(createImage);
+		Link createLink = new Link("edit");
 		createLink.setWindowToOpen(BannerEditorWindow.class);
 		createLink.addParameter(BannerBusiness.PARAMETER_BANNER_ID, this._bannerID);
 		layer.add(createLink);
