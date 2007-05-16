@@ -37,6 +37,7 @@ public class BannerCarousel extends Block implements Builderaware {
 
 	private String iStyleClass = "myGallery";
 	private String iObjectID = "myGallery";
+	private String iTarget = Link.TARGET_BLANK_WINDOW;
 
 	public static String CACHE_KEY = "banner_carousel_cache";
 
@@ -55,7 +56,7 @@ public class BannerCarousel extends Block implements Builderaware {
 			getParentPage().addStyleSheetURL(getBundle(iwc).getResourcesURL() + "/style/banner.css");
 		}
 
-		return cacheStatePrefix + this._bannerID;
+		return cacheStatePrefix + this._bannerID + iwc.hasEditPermission(this);
 	}
 
 	public void main(IWContext iwc) throws Exception {
@@ -143,6 +144,9 @@ public class BannerCarousel extends Block implements Builderaware {
 			link.setURL(ad.getURL());
 			link.setToolTip(ad.getURL());
 			link.setStyleClass("open");
+			if (iTarget != null) {
+				link.setTarget(iTarget);
+			}
 			image.add(link);
 
 			Image adImage = BannerBusiness.getImage(BannerBusiness.getImageID(ad));
@@ -191,6 +195,10 @@ public class BannerCarousel extends Block implements Builderaware {
 		}
 
 		return obj;
+	}
+
+	public void setTarget(String target) {
+		this.iTarget = target;
 	}
 
 	public void setStyleClass(String styleClass) {
