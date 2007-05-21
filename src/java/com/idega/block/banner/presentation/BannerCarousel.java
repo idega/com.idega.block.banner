@@ -1,5 +1,6 @@
 package com.idega.block.banner.presentation;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,6 +9,10 @@ import com.idega.block.banner.business.BannerBusiness;
 import com.idega.block.banner.business.BannerFinder;
 import com.idega.block.banner.data.AdEntity;
 import com.idega.block.banner.data.BannerEntity;
+import com.idega.block.web2.business.Web2Business;
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
+import com.idega.business.IBORuntimeException;
 import com.idega.core.component.data.ICObjectInstance;
 import com.idega.idegaweb.IWBundle;
 import com.idega.idegaweb.IWResourceBundle;
@@ -51,7 +56,12 @@ public class BannerCarousel extends Block implements Builderaware {
 
 	protected String getCacheState(IWContext iwc, String cacheStatePrefix) {
 		if (getParentPage() != null) {
-			getParentPage().addJavascriptURL(getBundle(iwc).getResourcesURL() + "/js/mootools.js");
+			try {
+				getParentPage().addJavascriptURL(getWeb2Business(iwc).getBundleURIToMootoolsLib());
+			}
+			catch (RemoteException e) {
+				e.printStackTrace();
+			}
 			getParentPage().addJavascriptURL(getBundle(iwc).getResourcesURL() + "/js/jd.gallery.js");
 			getParentPage().addStyleSheetURL(getBundle(iwc).getResourcesURL() + "/style/banner.css");
 		}
@@ -162,14 +172,23 @@ public class BannerCarousel extends Block implements Builderaware {
 		Layer layer = new Layer();
 		layer.setStyleClass("adminLayer");
 
-		// Image createImage = iwc.getIWMainApplication().getCoreBundle().getImage("shared/create.gif");
+		Image createImage = iwc.getIWMainApplication().getCoreBundle().getImage("shared/create.gif");
 
-		Link createLink = new Link("edit");
+		Link createLink = new Link(createImage);
 		createLink.setWindowToOpen(BannerEditorWindow.class);
 		createLink.addParameter(BannerBusiness.PARAMETER_BANNER_ID, this._bannerID);
 		layer.add(createLink);
 
 		return layer;
+	}
+
+	public Web2Business getWeb2Business(IWContext iwc) {
+		try {
+			return (Web2Business) IBOLookup.getServiceInstance(iwc, Web2Business.class);
+		}
+		catch (IBOLookupException e) {
+			throw new IBORuntimeException(e);
+		}
 	}
 
 	public boolean deleteBlock(int ICObjectInstanceID) {

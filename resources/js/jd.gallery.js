@@ -170,7 +170,7 @@ var gallery = new Class({
 					'padding':'0px',
 					'backgroundImage':"url('" + this.galleryData[i].image + "')",
 					'backgroundPosition':"center center",
-					'opacity':'0'
+					'opacity':'-0.01'
 				}).injectInside(el),
 				'opacity',
 				{duration: this.options.fadeDuration}
@@ -237,7 +237,7 @@ var gallery = new Class({
 			{
 				if ((i != this.currentIter)) this.galleryElements[i].set(0);
 			}
-			if (num > this.currentIter) this.galleryElements[num].custom(1);
+			if (num > this.currentIter) this.galleryElements[num].custom(0.99);
 			else
 			{
 				this.galleryElements[num].set(1);
