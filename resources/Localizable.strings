@@ -1,4 +1,3 @@
-#Fri Oct 24 12:54:49 CEST 2003
 =
 Mobile_phone=
 ad=Augl\u00FDsing
@@ -10,6 +9,7 @@ delete=
 detach=
 edit=
 iw.component.com.idega.block.banner.presentation.Banner.name=Banner
+iw.component.com.idega.block.banner.presentation.BannerCarousel.name=BannerCarousel
 max_hits=H\u00E1marksfj\u00F6ldi smella
 max_impressions=H\u00E1marksfj\u00F6ldi s\u00FDninga
 name=Nafn
