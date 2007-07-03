@@ -1,1 +1,22 @@
-<pxml></pxml>
+<?xml version="1.0" encoding="UTF-8"?>
+<pxml>
+  <map>
+    <key>
+      <name>component_name</name>
+      <type>java.lang.String</type>
+      <value>BannerCarousel</value>
+    </key>
+    <key>
+      <name>component_type</name>
+      <type>java.lang.String</type>
+      <value>iw.block</value>
+    </key>
+    <key>
+      <name>iw_component_methods</name>
+      <value>
+        <map />
+      </value>
+      <type>map</type>
+    </key>
+  </map>
+</pxml>
