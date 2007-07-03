@@ -43,6 +43,7 @@ public class BannerCarousel extends Block implements Builderaware {
 	private String iStyleClass = "myGallery";
 	private String iObjectID = "myGallery";
 	private String iTarget = Link.TARGET_BLANK_WINDOW;
+	private int iDelay = 5000;
 
 	public static String CACHE_KEY = "banner_carousel_cache";
 
@@ -107,7 +108,7 @@ public class BannerCarousel extends Block implements Builderaware {
 		buffer.append("\t").append("\t").append("showCarousel: false,").append("\n");
 		buffer.append("\t").append("\t").append("embedLinks: true,").append("\n");
 		buffer.append("\t").append("\t").append("showInfopane: false,").append("\n");
-		buffer.append("\t").append("\t").append("delay: 5000").append("\n");
+		buffer.append("\t").append("\t").append("delay: ").append(this.iDelay).append("\n");
 		buffer.append("\t").append("});").append("\n");
 		buffer.append("}");
 
@@ -226,5 +227,9 @@ public class BannerCarousel extends Block implements Builderaware {
 
 	public void setObjectID(String objectID) {
 		this.iObjectID = objectID;
+	}
+
+	public void setDelay(int delay) {
+		this.iDelay = delay * 1000;
 	}
 }
