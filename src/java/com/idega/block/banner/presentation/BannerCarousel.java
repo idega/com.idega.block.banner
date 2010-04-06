@@ -188,7 +188,7 @@ public class BannerCarousel extends Block implements Builderaware {
 
 	public Web2Business getWeb2Business(IWContext iwc) {
 		try {
-			return IBOLookup.getServiceInstance(iwc, Web2Business.class);
+			return (Web2Business) IBOLookup.getServiceInstance(iwc, Web2Business.class);
 		}
 		catch (IBOLookupException e) {
 			throw new IBORuntimeException(e);
