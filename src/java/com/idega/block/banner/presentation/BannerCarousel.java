@@ -51,12 +51,10 @@ public class BannerCarousel extends Block implements Builderaware {
 		super.setCacheable(getCacheKey(), 999999999);
 	}
 
-	@Override
 	public String getCacheKey() {
 		return CACHE_KEY;
 	}
 
-	@Override
 	protected String getCacheState(IWContext iwc, String cacheStatePrefix) {
 		if (getParentPage() != null) {
 			try {
@@ -72,7 +70,6 @@ public class BannerCarousel extends Block implements Builderaware {
 		return cacheStatePrefix + this._bannerID + iwc.hasEditPermission(this);
 	}
 
-	@Override
 	public void main(IWContext iwc) throws Exception {
 		this._iwrb = getResourceBundle(iwc);
 		this._iwb = getBundle(iwc);
@@ -195,7 +192,6 @@ public class BannerCarousel extends Block implements Builderaware {
 		}
 	}
 
-	@Override
 	public boolean deleteBlock(int ICObjectInstanceID) {
 		BannerEntity banner = BannerFinder.getObjectInstanceFromID(ICObjectInstanceID);
 		if (banner != null) {
@@ -205,12 +201,10 @@ public class BannerCarousel extends Block implements Builderaware {
 		return false;
 	}
 
-	@Override
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
 	}
 
-	@Override
 	public Object clone() {
 		BannerCarousel obj = null;
 		try {
@@ -227,7 +221,6 @@ public class BannerCarousel extends Block implements Builderaware {
 		this.iTarget = target;
 	}
 
-	@Override
 	public void setStyleClass(String styleClass) {
 		this.iStyleClass = styleClass;
 	}
