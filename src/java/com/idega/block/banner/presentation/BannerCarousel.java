@@ -210,19 +210,6 @@ public class BannerCarousel extends Block implements Builderaware {
 		return IW_BUNDLE_IDENTIFIER;
 	}
 
-	@Override
-	public Object clone() {
-		BannerCarousel obj = null;
-		try {
-			obj = (BannerCarousel) super.clone();
-		}
-		catch (Exception ex) {
-			ex.printStackTrace(System.err);
-		}
-
-		return obj;
-	}
-
 	public void setTarget(String target) {
 		this.iTarget = target;
 	}
