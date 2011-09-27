@@ -50,6 +50,7 @@ public class BannerEditorWindow extends IWAdminWindow {
 		setMethod("get");
 	}
 
+	@Override
 	public void main(IWContext iwc) throws Exception {
 		/**
 		 * @todo permission
@@ -60,7 +61,7 @@ public class BannerEditorWindow extends IWAdminWindow {
 		addTitle(this._iwrb.getLocalizedString("banner_admin", "Banner Admin"));
 
 		try {
-			this._userID = LoginBusinessBean.getUser(iwc).getID();
+			this._userID = LoginBusinessBean.getUser(iwc).getId();
 		}
 		catch (Exception e) {
 			this._userID = -1;
@@ -335,6 +336,7 @@ public class BannerEditorWindow extends IWAdminWindow {
 		addSubmitButton(new CloseButton(this._iwrb.getImage("close.gif")));
 	}
 
+	@Override
 	public String getBundleIdentifier() {
 		return IW_BUNDLE_IDENTIFIER;
 	}
