@@ -44,6 +44,7 @@ public class MediaSlider extends Block{
 		if(!ListUtil.isEmpty(uris)){
 			return uris;
 		}
+		System.out.println(urisString);
 		if(!StringUtil.isEmpty(urisString)){
 			String [] urisFromString = urisString.split(",");
 			return Arrays.asList(urisFromString);
@@ -118,6 +119,7 @@ public class MediaSlider extends Block{
 		IWMainApplication iwma = iwc.getApplicationContext().getIWMainApplication();
 		IWBundle iwb = iwma.getBundle(BannerConstants.IW_BUNDLE_IDENTIFIER);
 		scripts.add(iwb.getVirtualPathWithFileNameString("javascript/media-slider.js"));
+		
 		
 		PresentationUtil.addJavaScriptSourcesLinesToHeader(iwc, scripts);
 	}
