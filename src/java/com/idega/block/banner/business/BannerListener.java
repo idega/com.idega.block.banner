@@ -8,7 +8,7 @@ import com.idega.event.IWPageEventListener;
  * Description:
  * Copyright:    Copyright (c) 2001
  * Company:      idega.is
- * @author 2001 - idega team - <a href="mailto:laddi@idega.is">ﬁÛrhallur Helgason</a>
+ * @author 2001 - idega team - <a href="mailto:laddi@idega.is">√û√≥rhallur Helgason</a>
  * @version 1.0
  */
 
