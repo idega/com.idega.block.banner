@@ -1,0 +1,50 @@
+<div class="adViewer"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<div class="createButton">
+		<h:outputLink styleClass="button">
+			<f:param name="prm_action" value="2" />
+			<span><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.create']}" /></span>
+		</h:outputLink>
+	</div>
+	
+	<table class="golfTable">
+		<thead>
+			<tr>
+				<th><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.name']}" /></th>
+				<th><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.url']}" /></th>
+				<th><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.flash_url']}" /></th>
+				<th><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.image_url']}" /></th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<ui:repeat value="#{addBean.ads}" var="ad">
+				<tr>
+					<td><h:outputText value="#{ad.name}" /></td>
+					<td><h:outputText value="#{ad.url}" /></td>
+					<td><h:outputText value="#{ad.flashUrl}" /></td>
+					<td><h:outputText value="#{ad.imageUrl}" /></td>
+					<td>
+						<h:outputLink styleClass="edit">
+							<f:param name="prm_action" value="2" />
+							<f:param name="prm_ad_id" value="#{ad.id}" />
+							<span><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.edit']}" /></span>
+						</h:outputLink>
+					</td>
+					<td>
+						<h:outputLink styleClass="delete">
+							<f:param name="prm_action" value="3" />
+							<f:param name="prm_ad_id" value="#{ad.id}" />
+							<span><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.delete']}" /></span>
+						</h:outputLink>
+					</td>
+				</tr>
+			</ui:repeat>
+		</tbody>
+	</table>
+</div>

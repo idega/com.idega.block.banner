@@ -1,0 +1,25 @@
+<div class="bannerAd"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:g="http://xmlns.idega.com/com.idega.block.banner">
+	
+	<ui:fragment rendered="#{not empty addBean.ad.flashUrl}">
+		<script>
+			jQuery(document).ready(
+				function () {
+					jQuery('.#{addBean.adSpace.name}').flash(
+						{
+							swf: '#{addBean.ad.flashUrl}',
+							width: #{addBean.adSpace.width},
+							height: #{addBean.adSpace.height},
+							wmode: 'transparent'
+						}
+					);
+				}
+			);
+		</script>
+	</ui:fragment>	
+	
+	<a href="#{addBean.ad.url}" target="_blank">
+		<span class="#{addBean.adSpace.name}"><img src="#{g:thumbsUrl(addBean.ad.imageUrl, addBean.adSpace.width, addBean.adSpace.height)}" width="#{addBean.adSpace.width}" height="#{addBean.adSpace.height}" alt="#{addBean.ad.name}" /></span>
+	</a>
+</div>

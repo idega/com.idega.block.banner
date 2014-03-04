@@ -1,0 +1,16 @@
+<div id="clubBanners"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+   	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:g="http://xmlns.idega.com/com.idega.block.banner">
+
+	<ul class="bjqs">
+		<ui:repeat value="#{addBean.ads}" var="ad">
+			<li>
+				<a href="#{ad.url}" target="_blank">
+					<img src="#{g:thumbsUrl(ad.imageUrl, 300, 150)}" width="300" height="150" alt="#{ad.name}" />
+				</a>
+			</li>
+		</ui:repeat>
+	</ul>
+</div>

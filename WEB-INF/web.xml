@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+
+	<servlet>
+		<display-name>Image Resize Servlet</display-name>
+		<servlet-name>ImageResizeServlet</servlet-name>
+		<servlet-class>com.idega.block.banner.servlet.ImageResizeServlet</servlet-class>
+		<init-param>
+			<param-name>maxAge</param-name>  
+			<param-value>604800</param-value>  
+		</init-param>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>ImageResizeServlet</servlet-name>
+		<url-pattern>/thumbsCreator/*</url-pattern>
+	</servlet-mapping>
+
+</web-app>

@@ -1,0 +1,79 @@
+<ui:component
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<form id="adEditForm" class="golfForm" action="#{addBean.responseUrl}" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="idegaweb_event_classname" value="#{addBean.eventHandler}" />
+		<input type="hidden" name="prm_action" value="1" />
+		<input type="hidden" name="prm_ad_id" value="#{addBean.ad.id}" />
+		<input type="hidden" name="prm_flash_url" value="#{addBean.ad.flashUrl}" />
+		<input type="hidden" name="prm_image_url" value="#{addBean.ad.imageUrl}" />
+		
+		<ui:fragment rendered="#{not empty addBean.ad.flashUrl}">
+			<script>
+				jQuery(document).ready(
+					function () {
+						jQuery('.flashImage').flash(
+							{
+								swf: '#{addBean.ad.flashUrl}',
+								width: 400,
+								height: 200,
+								wmode: 'transparent'
+							}
+						);
+					}
+				);
+			</script>
+		</ui:fragment>	
+		
+		<div class="formSection">
+			<div class="formItem">
+				<label for="prm_name"><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.name']}" /></label>
+				<input type="text" name="prm_name" value="#{addBean.ad.name}" />
+			</div>
+			<div class="formItem">
+				<label for="prm_url"><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.url']}" /></label>
+				<input type="text" name="prm_url" value="#{addBean.ad.url}" />
+			</div>
+			
+			<div class="formItem imageItem">
+				<ui:fragment rendered="#{not empty addBean.ad and not empty addBean.ad.flashUrl}">
+					<figure>
+						<span class="flashImage">
+							<ui:fragment rendered="#{not empty addBean.ad.imageUrl}">
+								<img src="#{addBean.ad.imageUrl}" alt="" />
+							</ui:fragment>
+						</span>
+					</figure>
+				</ui:fragment>
+				<label><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.flash_url']}" /></label>
+				<input type="file" name="prm_flash" />
+			</div>
+			<div class="formItem imageItem">
+				<ui:fragment rendered="#{not empty addBean.ad and not empty addBean.ad.imageUrl}">
+					<figure><img src="#{addBean.ad.imageUrl}" alt="" /></figure>
+				</ui:fragment>
+				<label><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.image_url']}" /></label>
+				<input type="file" name="prm_image" />
+			</div>
+			
+			<ui:repeat value="#{addBean.properties}" var="region">
+				<div class="formItem checkboxItem">
+					<ui:fragment rendered="#{region.selected}">
+						<input type="checkbox" name="prm_region" value="#{region.id}" checked="checked" />
+					</ui:fragment>
+					<ui:fragment rendered="#{!region.selected}">
+						<input type="checkbox" name="prm_region" value="#{region.id}" />
+					</ui:fragment>
+					<label for="prm_region"><h:outputText value="#{region.value}" /></label>
+				</div>
+			</ui:repeat>
+			
+			<div class="buttons">
+				<input class="button" type="submit" name="prm_submit" value="#{localizedStrings['com.idega.block.banner']['ad.save']}" />
+			</div>
+		</div>
+	
+	</form>
+</ui:component>
