@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.faces.context.FacesContext;
 
@@ -19,6 +20,7 @@ import com.idega.block.web2.business.JQuery;
 import com.idega.builder.bean.AdvancedProperty;
 import com.idega.builder.business.BuilderLogicWrapper;
 import com.idega.business.IBORuntimeException;
+import com.idega.core.accesscontrol.business.AccessController;
 import com.idega.core.file.business.ICFileSystemFactory;
 import com.idega.core.file.data.ICFile;
 import com.idega.event.IWPageEventListener;
@@ -58,12 +60,21 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 	@Autowired
 	private BuilderLogicWrapper wrapper;
 
+	private boolean hasRights(IWContext iwc){
+		AccessController access = iwc.getAccessController();
+		try{
+			return iwc.isLoggedOn() && (access.isAdmin(iwc) || access.hasRole("banner_ad_editor", iwc));
+		}catch (Exception e) {
+			getLogger().log(Level.WARNING, "failed getting permissions", e);
+		}
+		return false;
+	}
 	@Override
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = IWContext.getIWContext(context);
 		
 		try {
-			if (!iwc.getAccessController().isAdmin(iwc)) {
+			if (!hasRights(iwc)) {
 				return;
 			}
 		}
