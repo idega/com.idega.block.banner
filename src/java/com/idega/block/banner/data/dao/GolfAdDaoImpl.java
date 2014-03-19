@@ -19,18 +19,22 @@ import com.idega.core.persistence.impl.GenericDaoImpl;
 public class GolfAdDaoImpl extends GenericDaoImpl implements GolfAdDao {
 
 	/* Ad spaces */
+	@Override
 	public List<AdSpace> getAdSpaces() {
 		return getResultList(AdSpace.QUERY_FIND_ALL, AdSpace.class);
 	}
 	
+	@Override
 	public List<AdSpace> getOpenAdSpaces() {
 		return getResultList(AdSpace.QUERY_FIND_ALL_OPEN_SPACES, AdSpace.class);
 	}
 	
+	@Override
 	public AdSpace getAdSpace(String name) {
 		return find(AdSpace.class, name);
 	}
 	
+	@Override
 	@Transactional(readOnly = false)
 	public void removeAdSpace(String name) {
 		AdSpace adSpace = getAdSpace(name);
@@ -39,6 +43,7 @@ public class GolfAdDaoImpl extends GenericDaoImpl implements GolfAdDao {
 		}
 	}
 	
+	@Override
 	@Transactional(readOnly = false)
 	public void storeAdSpace(String name, String description, int width, int height, boolean clubSpace) {
 		AdSpace adSpace = getAdSpace(name);
@@ -55,18 +60,22 @@ public class GolfAdDaoImpl extends GenericDaoImpl implements GolfAdDao {
 	}
 	
 	/* Ads */
+	@Override
 	public List<Ad> getAds() {
 		return getResultList(Ad.QUERY_FIND_ALL, Ad.class);
 	}
 	
+	@Override
 	public List<Ad> getAds(String category) {
 		return getResultList(Ad.QUERY_FIND_ALL_BY_CATEGORY, Ad.class, new Param("category", category));
 	}
 	
+	@Override
 	public Ad getAd(Long id) {
 		return find(Ad.class, id);
 	}
 	
+	@Override
 	@Transactional(readOnly = false)
 	public void removeAd(Long id) {
 		Ad ad = getAd(id);
@@ -75,8 +84,9 @@ public class GolfAdDaoImpl extends GenericDaoImpl implements GolfAdDao {
 		}
 	}
 	
+	@Override
 	@Transactional(readOnly = false)
-	public void storeAd(Long id, String name, String url, String imageUrl, String flashUrl, String category, List<AdSpace> adSpaces) {
+	public void storeAd(Long id, String name, String url, String imageUrl, String flashUrl, String category, List<AdSpace> adSpaces,String html) {
 		Ad ad = id != null ? getAd(id) : null;
 		if (ad == null) {
 			ad = new Ad();
@@ -87,6 +97,7 @@ public class GolfAdDaoImpl extends GenericDaoImpl implements GolfAdDao {
 		ad.setFlashUrl(flashUrl);
 		ad.setCategory(category);
 		ad.setAdSpaces(adSpaces);
+		ad.setHtml(html);
 		
 		getEntityManager().persist(ad);
 	}

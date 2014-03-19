@@ -37,6 +37,11 @@
 				<input type="text" name="prm_url" value="#{addBean.ad.url}" />
 			</div>
 			
+			<div class="formItem">
+				<label for="prm_html"><h:outputText value="#{localizedStrings['com.idega.block.banner']['ad.html']}" /></label>
+				<textarea name="prm_html" >#{addBean.ad.html}</textarea>
+			</div>
+			
 			<div class="formItem imageItem">
 				<ui:fragment rendered="#{not empty addBean.ad and not empty addBean.ad.flashUrl}">
 					<figure>

@@ -1,6 +1,8 @@
 <div class="bannerAd"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:g="http://xmlns.idega.com/com.idega.block.banner">
+	xmlns:g="http://xmlns.idega.com/com.idega.block.banner"
+	xmlns:h="http://java.sun.com/jsf/html"
+	>
 	
 	<ui:fragment rendered="#{not empty addBean.ad.flashUrl}">
 		<script>
@@ -19,7 +21,13 @@
 		</script>
 	</ui:fragment>	
 	
-	<a href="#{addBean.ad.url}" target="_blank">
-		<span class="#{addBean.adSpace.name}"><img src="#{g:thumbsUrl(addBean.ad.imageUrl, addBean.adSpace.width, addBean.adSpace.height)}" width="#{addBean.adSpace.width}" height="#{addBean.adSpace.height}" alt="#{addBean.ad.name}" /></span>
-	</a>
+	<ui:fragment rendered="#{not empty addBean.ad.imageUrl}">
+		<a href="#{addBean.ad.url}" target="_blank">
+			<span class="#{addBean.adSpace.name}"><img src="#{g:thumbsUrl(addBean.ad.imageUrl, addBean.adSpace.width, addBean.adSpace.height)}" width="#{addBean.adSpace.width}" height="#{addBean.adSpace.height}" alt="#{addBean.ad.name}" /></span>
+		</a>
+	</ui:fragment>
+	
+	<ui:fragment rendered="#{(empty addBean.ad.flashUrl) and (not empty addBean.ad.html)}">
+		<h:outputText escape="false" value="#{addBean.ad.html}" />
+	</ui:fragment>
 </div>

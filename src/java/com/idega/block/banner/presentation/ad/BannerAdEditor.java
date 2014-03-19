@@ -46,6 +46,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 	private static final String PARAMETER_FLASH_URL = "prm_flash_url";
 	private static final String PARAMETER_IMAGE_URL = "prm_image_url";
 	private static final String PARAMETER_REGION = "prm_region";
+	private static final String PARAMETER_HTML = "prm_html";
 	
 	private static final int ACTION_VIEW = 1;
 	private static final int ACTION_EDIT = 2;
@@ -153,6 +154,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 		String url = iwc.getParameter(PARAMETER_URL);
 		String flashUrl = iwc.isParameterSet(PARAMETER_FLASH_URL) ? iwc.getParameter(PARAMETER_FLASH_URL) : null;
 		String imageUrl = iwc.isParameterSet(PARAMETER_IMAGE_URL) ? iwc.getParameter(PARAMETER_IMAGE_URL) : null;
+		String html = iwc.isParameterSet(PARAMETER_HTML) ? iwc.getParameter(PARAMETER_HTML) : null;
 		String category = iwc.getApplicationSettings().getProperty("golf.ad.category", "none");
 		String[] spaces = iwc.getParameterValues(PARAMETER_REGION);
 		
@@ -189,7 +191,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 			adSpaces = null;
 		}
 		
-		getDao().storeAd(id, name, url, imageUrl, flashUrl, category, adSpaces);
+		getDao().storeAd(id, name, url, imageUrl, flashUrl, category, adSpaces,html);
 		
 		return true;
 	}

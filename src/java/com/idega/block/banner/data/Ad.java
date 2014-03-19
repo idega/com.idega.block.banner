@@ -56,6 +56,9 @@ public class Ad implements Serializable {
 	
 	@Column(name = COLUMN_CATEGORY)
 	private String category;
+	
+	@Column(name = "html",length=4000)
+	private String html;
 
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = AdSpace.class)
 	@JoinTable(name = AdSpace.AD_SPACE_AD, joinColumns = { @JoinColumn(name = COLUMN_ID) }, inverseJoinColumns = { @JoinColumn(name = AdSpace.COLUMN_NAME) })
@@ -142,5 +145,13 @@ public class Ad implements Serializable {
 		else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getHtml() {
+		return html;
+	}
+
+	public void setHtml(String html) {
+		this.html = html;
 	}
 }

@@ -29,6 +29,6 @@ public interface GolfAdDao extends GenericDao {
 	
 	public void removeAd(Long id);
 	
-	public void storeAd(Long id, String name, String url, String imageUrl, String flashUrl, String category, List<AdSpace> adSpaces);
+	public void storeAd(Long id, String name, String url, String imageUrl, String flashUrl, String category, List<AdSpace> adSpaces,String html);
 	
 }
