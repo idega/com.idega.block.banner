@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.idega.block.banner.data.Ad;
-import com.idega.block.banner.data.AdSpace;
+import com.idega.block.banner.data.BannerAd;
+import com.idega.block.banner.data.BannerAdSpace;
 import com.idega.builder.bean.AdvancedProperty;
 
 @Service("addBean")
@@ -16,9 +16,9 @@ public class AddBean {
 	private String eventHandler;
 	private String responseUrl;
 	private List<AdvancedProperty> properties;
-	private AdSpace adSpace;
-	private Ad ad;
-	private List<Ad> ads;
+	private BannerAdSpace adSpace;
+	private BannerAd ad;
+	private List<BannerAd> ads;
 	public String getEventHandler() {
 		return eventHandler;
 	}
@@ -41,27 +41,27 @@ public class AddBean {
 	public void setProperties(List<AdvancedProperty> properties) {
 		this.properties = properties;
 	}
-	public AdSpace getAdSpace() {
+	public BannerAdSpace getAdSpace() {
 		return adSpace;
 	}
 
-	public void setAdSpace(AdSpace adSpace) {
+	public void setAdSpace(BannerAdSpace adSpace) {
 		this.adSpace = adSpace;
 	}
 
-	public Ad getAd() {
+	public BannerAd getAd() {
 		return ad;
 	}
 
-	public void setAd(Ad ad) {
+	public void setAd(BannerAd ad) {
 		this.ad = ad;
 	}
 
-	public List<Ad> getAds() {
+	public List<BannerAd> getAds() {
 		return ads;
 	}
 
-	public void setAds(List<Ad> ads) {
+	public void setAds(List<BannerAd> ads) {
 		this.ads = ads;
 	}
 }

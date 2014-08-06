@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.block.banner.BannerConstants;
 import com.idega.block.banner.business.AddBean;
-import com.idega.block.banner.data.AdSpace;
+import com.idega.block.banner.data.BannerAdSpace;
 import com.idega.block.banner.data.dao.BannerAdDao;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.web2.business.JQuery;
@@ -104,7 +104,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 				}
 				bean.setEventHandler(IWMainApplication.getEncryptedClassName(BannerAdEditor.class));
 
-				List<AdSpace> adSpaces = getDao().getAdSpaces();
+				List<BannerAdSpace> adSpaces = getDao().getAdSpaces();
 				if (iwc.isParameterSet(PARAMETER_AD)) {
 					bean.setAd(getDao().getAd(Long.parseLong(iwc.getParameter(PARAMETER_AD))));
 				}
@@ -117,7 +117,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 				}
 				
 				List<AdvancedProperty> properties = new ArrayList<AdvancedProperty>();
-				for (AdSpace adSpace : adSpaces) {
+				for (BannerAdSpace adSpace : adSpaces) {
 					AdvancedProperty property = new AdvancedProperty(adSpace.getName(), (adSpace.getDescription() != null ? adSpace.getDescription() : "") + " (" + adSpace.getWidth() + "x" + adSpace.getHeight() + ")");
 					if (bean.getAd() != null && bean.getAd().getAdSpaces().contains(adSpace)) {
 						property.setSelected(true);
@@ -181,7 +181,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 			throw new IBORuntimeException(re);
 		}
 
-		List<AdSpace> adSpaces = new ArrayList<AdSpace>();
+		List<BannerAdSpace> adSpaces = new ArrayList<BannerAdSpace>();
 		if (spaces != null && spaces.length > 0) {
 			for (String space : spaces) {
 				adSpaces.add(getDao().getAdSpace(space));

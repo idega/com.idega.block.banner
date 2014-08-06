@@ -18,10 +18,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ba_ad_space")
 @NamedQueries({
-	@NamedQuery(name = AdSpace.QUERY_FIND_ALL, query = "from AdSpace a"),
-	@NamedQuery(name = AdSpace.QUERY_FIND_ALL_OPEN_SPACES, query = "from AdSpace a where a.clubSpace is false")
+	@NamedQuery(name = BannerAdSpace.QUERY_FIND_ALL_BANNER_AD_SPACES, query = "from BannerAdSpace bas"),
+	@NamedQuery(name = BannerAdSpace.QUERY_FIND_ALL_OPEN_BANNER_AD_SPACES, query = "from BannerAdSpace bas where bas.clubSpace is false")
 })
-public class AdSpace implements Serializable {
+public class BannerAdSpace implements Serializable {
 
 	private static final long serialVersionUID = 6281281138790206814L;
 
@@ -31,34 +31,34 @@ public class AdSpace implements Serializable {
 	private static final String COLUMN_HEIGHT = "height";
 	private static final String COLUMN_CLUB_SPACE = "club_space";
 	private static final String COLUMN_POPUP = "is_popup";
-	
+
 	protected static final String AD_SPACE_AD = "banner_ad_space_ad";
-	
-	public static final String QUERY_FIND_ALL = "adSpace.findAll";
-	public static final String QUERY_FIND_ALL_OPEN_SPACES = "adSpace.findAllOpenSpaces";
+
+	public static final String QUERY_FIND_ALL_BANNER_AD_SPACES = "bannerAdSpace.findAll";
+	public static final String QUERY_FIND_ALL_OPEN_BANNER_AD_SPACES = "bannerAdSpace.findAllOpenSpaces";
 
 	@Id
 	@Column(name = COLUMN_NAME, length = 50)
 	private String name;
-	
+
 	@Column(name = COLUMN_DESCRIPTION)
 	private String description;
-	
+
 	@Column(name = COLUMN_WIDTH)
 	private int width;
-	
+
 	@Column(name = COLUMN_HEIGHT)
 	private int height;
-	
+
 	@Column(name = COLUMN_CLUB_SPACE)
 	private boolean clubSpace;
-	
+
 	@Column(name = COLUMN_POPUP, nullable = true)
 	private boolean popup;
-	
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Ad.class)
-	@JoinTable(name = AD_SPACE_AD, joinColumns = { @JoinColumn(name = COLUMN_NAME) }, inverseJoinColumns = { @JoinColumn(name = Ad.COLUMN_ID) })
-	private List<Ad> ads;
+
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = BannerAd.class)
+	@JoinTable(name = AD_SPACE_AD, joinColumns = { @JoinColumn(name = COLUMN_NAME) }, inverseJoinColumns = { @JoinColumn(name = BannerAd.COLUMN_ID) })
+	private List<BannerAd> ads;
 
 	public String getName() {
 		return name;
@@ -91,28 +91,28 @@ public class AdSpace implements Serializable {
 	public void setHeight(int height) {
 		this.height = height;
 	}
-	
+
 	public boolean getClubSpace() {
 		return clubSpace;
 	}
-	
+
 	public void setClubSpace(boolean clubSpace) {
 		this.clubSpace = clubSpace;
 	}
-	
+
 	public boolean getPopup() {
 		return popup;
 	}
-	
+
 	public void setPopup(boolean popup) {
 		this.popup = popup;
 	}
 
-	public List<Ad> getAds() {
+	public List<BannerAd> getAds() {
 		return ads;
 	}
 
-	public void setAds(List<Ad> ads) {
+	public void setAds(List<BannerAd> ads) {
 		this.ads = ads;
 	}
 
@@ -132,7 +132,7 @@ public class AdSpace implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AdSpace other = (AdSpace) obj;
+		BannerAdSpace other = (BannerAdSpace) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

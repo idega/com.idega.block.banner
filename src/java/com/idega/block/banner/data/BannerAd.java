@@ -20,10 +20,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "ba_advertisement")
 @NamedQueries({
-	@NamedQuery(name = Ad.QUERY_FIND_ALL, query = "from Ad a"),
-	@NamedQuery(name = Ad.QUERY_FIND_ALL_BY_CATEGORY, query = "from Ad a where a.category = :category")
+	@NamedQuery(name = BannerAd.QUERY_FIND_ALL_BANNER_ADS, query = "from BannerAd ba"),
+	@NamedQuery(name = BannerAd.QUERY_FIND_ALL_BANNER_ADS_BY_CATEGORY, query = "from BannerAd ba where a.category = :category")
 })
-public class Ad implements Serializable {
+public class BannerAd implements Serializable {
 
 	private static final long serialVersionUID = -9094300889717171697L;
 
@@ -33,9 +33,9 @@ public class Ad implements Serializable {
 	private static final String COLUMN_IMAGE_URL = "image_url";
 	private static final String COLUMN_FLASH_URL = "flash_url";
 	private static final String COLUMN_CATEGORY = "category";
-	
-	public static final String QUERY_FIND_ALL = "ad.findAll";
-	public static final String QUERY_FIND_ALL_BY_CATEGORY = "ad.findAllByCategory";
+
+	public static final String QUERY_FIND_ALL_BANNER_ADS = "bannerAd.findAll";
+	public static final String QUERY_FIND_ALL_BANNER_ADS_BY_CATEGORY = "bannerAd.findAllByCategory";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,16 +53,16 @@ public class Ad implements Serializable {
 
 	@Column(name = COLUMN_FLASH_URL)
 	private String flashUrl;
-	
+
 	@Column(name = COLUMN_CATEGORY)
 	private String category;
-	
+
 	@Column(name = "html",length=4000)
 	private String html;
 
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = AdSpace.class)
-	@JoinTable(name = AdSpace.AD_SPACE_AD, joinColumns = { @JoinColumn(name = COLUMN_ID) }, inverseJoinColumns = { @JoinColumn(name = AdSpace.COLUMN_NAME) })
-	private List<AdSpace> adSpaces;
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = BannerAdSpace.class)
+	@JoinTable(name = BannerAdSpace.AD_SPACE_AD, joinColumns = { @JoinColumn(name = COLUMN_ID) }, inverseJoinColumns = { @JoinColumn(name = BannerAdSpace.COLUMN_NAME) })
+	private List<BannerAdSpace> adSpaces;
 
 	public Long getId() {
 		return id;
@@ -113,11 +113,11 @@ public class Ad implements Serializable {
 		this.category = category;
 	}
 
-	public List<AdSpace> getAdSpaces() {
+	public List<BannerAdSpace> getAdSpaces() {
 		return adSpaces;
 	}
 
-	public void setAdSpaces(List<AdSpace> adSpaces) {
+	public void setAdSpaces(List<BannerAdSpace> adSpaces) {
 		this.adSpaces = adSpaces;
 	}
 
@@ -137,7 +137,7 @@ public class Ad implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Ad other = (Ad) obj;
+		BannerAd other = (BannerAd) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

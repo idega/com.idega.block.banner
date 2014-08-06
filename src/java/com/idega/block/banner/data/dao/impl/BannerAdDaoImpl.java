@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.idega.block.banner.data.Ad;
-import com.idega.block.banner.data.AdSpace;
+import com.idega.block.banner.data.BannerAd;
+import com.idega.block.banner.data.BannerAdSpace;
 import com.idega.block.banner.data.dao.BannerAdDao;
 import com.idega.core.persistence.Param;
 import com.idega.core.persistence.impl.GenericDaoImpl;
@@ -21,24 +21,24 @@ public class BannerAdDaoImpl extends GenericDaoImpl implements BannerAdDao {
 
 	/* Ad spaces */
 	@Override
-	public List<AdSpace> getAdSpaces() {
-		return getResultList(AdSpace.QUERY_FIND_ALL, AdSpace.class);
+	public List<BannerAdSpace> getAdSpaces() {
+		return getResultList(BannerAdSpace.QUERY_FIND_ALL_BANNER_AD_SPACES, BannerAdSpace.class);
 	}
 	
 	@Override
-	public List<AdSpace> getOpenAdSpaces() {
-		return getResultList(AdSpace.QUERY_FIND_ALL_OPEN_SPACES, AdSpace.class);
+	public List<BannerAdSpace> getOpenAdSpaces() {
+		return getResultList(BannerAdSpace.QUERY_FIND_ALL_OPEN_BANNER_AD_SPACES, BannerAdSpace.class);
 	}
 	
 	@Override
-	public AdSpace getAdSpace(String name) {
-		return find(AdSpace.class, name);
+	public BannerAdSpace getAdSpace(String name) {
+		return find(BannerAdSpace.class, name);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public void removeAdSpace(String name) {
-		AdSpace adSpace = getAdSpace(name);
+		BannerAdSpace adSpace = getAdSpace(name);
 		if (adSpace != null) {
 			getEntityManager().remove(adSpace);
 		}
@@ -47,9 +47,9 @@ public class BannerAdDaoImpl extends GenericDaoImpl implements BannerAdDao {
 	@Override
 	@Transactional(readOnly = false)
 	public void storeAdSpace(String name, String description, int width, int height, boolean clubSpace) {
-		AdSpace adSpace = getAdSpace(name);
+		BannerAdSpace adSpace = getAdSpace(name);
 		if (adSpace == null) {
-			adSpace = new AdSpace();
+			adSpace = new BannerAdSpace();
 			adSpace.setName(name);
 		}
 		adSpace.setDescription(description);
@@ -62,24 +62,24 @@ public class BannerAdDaoImpl extends GenericDaoImpl implements BannerAdDao {
 	
 	/* Ads */
 	@Override
-	public List<Ad> getAds() {
-		return getResultList(Ad.QUERY_FIND_ALL, Ad.class);
+	public List<BannerAd> getAds() {
+		return getResultList(BannerAd.QUERY_FIND_ALL_BANNER_ADS, BannerAd.class);
 	}
 	
 	@Override
-	public List<Ad> getAds(String category) {
-		return getResultList(Ad.QUERY_FIND_ALL_BY_CATEGORY, Ad.class, new Param("category", category));
+	public List<BannerAd> getAds(String category) {
+		return getResultList(BannerAd.QUERY_FIND_ALL_BANNER_ADS_BY_CATEGORY, BannerAd.class, new Param("category", category));
 	}
 	
 	@Override
-	public Ad getAd(Long id) {
-		return find(Ad.class, id);
+	public BannerAd getAd(Long id) {
+		return find(BannerAd.class, id);
 	}
 	
 	@Override
 	@Transactional(readOnly = false)
 	public void removeAd(Long id) {
-		Ad ad = getAd(id);
+		BannerAd ad = getAd(id);
 		if (ad != null) {
 			getEntityManager().remove(ad);
 		}
@@ -87,10 +87,10 @@ public class BannerAdDaoImpl extends GenericDaoImpl implements BannerAdDao {
 	
 	@Override
 	@Transactional(readOnly = false)
-	public void storeAd(Long id, String name, String url, String imageUrl, String flashUrl, String category, List<AdSpace> adSpaces,String html) {
-		Ad ad = id != null ? getAd(id) : null;
+	public void storeAd(Long id, String name, String url, String imageUrl, String flashUrl, String category, List<BannerAdSpace> adSpaces,String html) {
+		BannerAd ad = id != null ? getAd(id) : null;
 		if (ad == null) {
-			ad = new Ad();
+			ad = new BannerAd();
 		}
 		ad.setName(name);
 		ad.setUrl(url);
