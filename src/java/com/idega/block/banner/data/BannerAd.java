@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @Table(name = "ba_advertisement")
 @NamedQueries({
 	@NamedQuery(name = BannerAd.QUERY_FIND_ALL_BANNER_ADS, query = "from BannerAd ba"),
-	@NamedQuery(name = BannerAd.QUERY_FIND_ALL_BANNER_ADS_BY_CATEGORY, query = "from BannerAd ba where a.category = :category")
+	@NamedQuery(name = BannerAd.QUERY_FIND_ALL_BANNER_ADS_BY_CATEGORY, query = "from BannerAd ba where ba.category = :category")
 })
 public class BannerAd implements Serializable {
 
