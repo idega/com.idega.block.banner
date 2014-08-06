@@ -13,18 +13,16 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
 
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.idega.block.banner.bean.ImageResizeAction;
 import com.idega.block.banner.bean.ImageResizeRequest;
 
-/**
- * Perform resize operation based on provided ImageResizeRequest parameters.
- * 
- * @author Future Medium Pty. Ltd - http://www.futuremedium.com.au/
- */
 @Service
-public class ImageResizeService {
+@Scope(BeanDefinition.SCOPE_SINGLETON)
+public class BannerImageResizeService {
 
   /**
    * Resize a source image based on request parameters.
@@ -45,7 +43,7 @@ public class ImageResizeService {
     }
     int targetWidth = request.getTargetWidth();
     int targetHeight = request.getTargetHeight();
-    
+
     boolean resizeImage = false;
     boolean cropImage = false;
     if (targetHeight == sourceHeight && targetWidth == sourceWidth) {
@@ -93,7 +91,7 @@ public class ImageResizeService {
 
     request.setResized(resizeImage);
     request.setCropped(cropImage);
-    
+
     if (resizeImage || cropImage) {
       double scaleX, scaleY;
 
@@ -113,7 +111,7 @@ public class ImageResizeService {
 
             result = this.doResize(sourceWidth, sourceHeight, scaleX, scaleY, source);
           }
-          
+
           // We know our new image matches one target dimension so crop the overhanging part of the other dimension in equal parts
           if (sourceHeight > targetHeight) {    // Chop the extra height
             int yOffset = (int) Math.rint( (sourceHeight - targetHeight) / 2);
@@ -130,14 +128,14 @@ public class ImageResizeService {
           }
           sourceWidth = (int) Math.rint(scaleX * sourceWidth);
           sourceHeight = (int) Math.rint(scaleY * sourceHeight);
-          
+
           result = this.doResize(sourceWidth, sourceHeight, scaleX, scaleY, source);
         }
       } else {
         // Scale both axes to fit entire image and ignore maintaining aspect ratio
         scaleX = (double) targetWidth / sourceWidth;
         scaleY = (double) targetHeight / sourceHeight;
-        
+
         result = this.doResize(targetWidth, targetHeight, scaleX, scaleY, source);
       }
     } else {
@@ -148,7 +146,7 @@ public class ImageResizeService {
     if (result != null && request.getDestinationFilePath() != null) {
       this.writeJPEG(result, request);
     }
-    
+
     return result;
   }
 
@@ -175,11 +173,11 @@ public class ImageResizeService {
     }
     return result;
   }
-  
+
   private void writeJPEG(BufferedImage input, ImageResizeRequest imageResizeRequest) throws IOException {
-    Iterator iter = ImageIO.getImageWritersByFormatName("JPG");
+    Iterator<ImageWriter> iter = ImageIO.getImageWritersByFormatName("JPG");
     if (iter.hasNext()) {
-      ImageWriter writer = (ImageWriter) iter.next();
+      ImageWriter writer = iter.next();
       ImageWriteParam iwp = writer.getDefaultWriteParam();
       iwp.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
       iwp.setCompressionQuality(imageResizeRequest.getCompressionQuality());

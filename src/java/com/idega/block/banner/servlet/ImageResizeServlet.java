@@ -27,12 +27,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.idega.block.banner.bean.ImageResizeAction;
 import com.idega.block.banner.bean.ImageResizeRequest;
-import com.idega.block.banner.business.ImageResizeService;
+import com.idega.block.banner.business.BannerImageResizeService;
 import com.idega.core.cache.IWCacheManager2;
 import com.idega.core.file.data.bean.ICFile;
 import com.idega.core.persistence.GenericDao;
@@ -42,17 +41,23 @@ import com.idega.util.expression.ELUtil;
 
 public class ImageResizeServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8854483436258326590L;
-	private static final Logger LOGGER = Logger.getLogger(ImageResizeServlet.class.getName());
+
 	private static final String CACHE_NAME_RESIZED_IMAGE = "ImageResizeServlet.resized";
 
 	private static int maxAge = 604800;
 
-	private static Log log = LogFactory.getLog(ImageResizeServlet.class);
-	
+	private static Logger LOGGER = Logger.getLogger(ImageResizeServlet.class.getName());
+
+	@Autowired
+	private BannerImageResizeService bannerImageResizeService;
+
+	private BannerImageResizeService getBannerImageResizeService() {
+		if (bannerImageResizeService == null) {
+			ELUtil.getInstance().autowire(this);
+		}
+		return bannerImageResizeService;
+	}
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -63,15 +68,15 @@ public class ImageResizeServlet extends HttpServlet {
 		if (configMaxAge != null)
 			maxAge = Integer.parseInt(configMaxAge);
 
-		log.debug("[ImageResizeServlet] Using \"" + maxAge + "\" as the cache timeout value");
+		LOGGER.info("[ImageResizeServlet] Using \"" + maxAge + "\" as the cache timeout value");
 	}
 
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		String media = request.getParameter("image_url");
-		
+
 		try {
 			ByteArrayOutputStream byteStream = null;
-	
+
 			Map<String, byte[]> cache = getCache(CACHE_NAME_RESIZED_IMAGE, (60 * 60 * 24));
 			if (cache != null && !cache.isEmpty()) {
 				if (cache.containsKey(request.getQueryString())) {
@@ -80,37 +85,37 @@ public class ImageResizeServlet extends HttpServlet {
 					byteStream.write(bytes);
 				}
 			}
-	
+
 			// Get values of parameters
 			String imageType = request.getParameter("type");
-	
+
 			InputStream stream = null;
 			if (byteStream == null) {
 				String width = request.getParameter("width");
 				if (width == null) {
 					width = "100";
 				}
-	
+
 				String height = request.getParameter("height");
 				if (height == null) {
 					height = "100";
 				}
-	
+
 				String maintainAspect = request.getParameter("maintain_aspect");
 				if (maintainAspect == null) {
 					maintainAspect = Boolean.TRUE.toString();
 				}
-	
+
 				String cropToAspect = request.getParameter("crop");
 				if (cropToAspect == null) {
 					cropToAspect = Boolean.TRUE.toString();
 				}
-	
+
 				String quality = request.getParameter("quality");
 				if (quality == null) {
 					quality = "1";
 				}
-	
+
 				// Fetch the image
 				if (media.indexOf("http") == -1) {
 					media = request.getScheme() + "://" + request.getServerName() + (request.getServerPort() != 80 ? ":" + request.getServerPort() : "") + media;
@@ -122,17 +127,17 @@ public class ImageResizeServlet extends HttpServlet {
 				else {
 					imageType = "jpeg";
 				}
-				
+
 				try{
 					URL url = new URL(media);
 					HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		
+
 					try {
 						stream = connection.getInputStream();
 					}
 					catch (FileNotFoundException fnfe) {
 						System.err.println("[ImageResizeServlet] " + fnfe.getMessage());
-						
+
 						throw fnfe;
 //						response.sendError(HttpServletResponse.SC_NOT_FOUND, media + " not found...");
 //						return;
@@ -150,12 +155,12 @@ public class ImageResizeServlet extends HttpServlet {
 						throw new IOException(e1);
 					}
 				}
-					
+
 				BufferedImage image = ImageIO.read(stream);
-	
-				ImageResizeService handler = new ImageResizeService();
+
+				BannerImageResizeService handler = getBannerImageResizeService();
 				ImageResizeRequest imageRequest = new ImageResizeRequest();
-	
+
 				// Set resize/crop attributes
 				imageRequest.setSourceImage(image);
 				imageRequest.setTargetHeight(Integer.parseInt(height));
@@ -164,38 +169,38 @@ public class ImageResizeServlet extends HttpServlet {
 				imageRequest.setCropToAspect(Boolean.parseBoolean(cropToAspect));
 				imageRequest.setCompressionQuality(Float.parseFloat(quality));
 				imageRequest.setResizeAction(ImageResizeAction.IF_LARGER);
-	
+
 				BufferedImage thumbnail = handler.resize(imageRequest);
-	
+
 				// Write the image into ByteArrayOutputStream
 				byteStream = new ByteArrayOutputStream();
 				ImageIO.write(thumbnail, imageType, byteStream);
-	
+
 				if (cache != null) {
 					cache.put(request.getQueryString(), byteStream.toByteArray());
 				}
 			}
-	
+
 			// Read the image into a BufferedImage object
 			try {
 				IWTimestamp stamp = new IWTimestamp();
 				stamp.addDays(7);
-	
+
 				// Update response
 				ServletOutputStream out = response.getOutputStream();
 				response.setContentType("image/" + imageType);
 				response.setContentLength(byteStream.size());
 				response.setHeader("Cache-Control", "PUBLIC, max-age=" + maxAge + ", must-revalidate");
 				response.setHeader("Expires", htmlExpiresDateFormat().format(stamp.getDate()));
-				
+
 				String token = '"' + getMd5Digest(byteStream.toByteArray()) + '"';
 				response.setHeader("ETag", token);
-	
+
 				out.write(byteStream.toByteArray());
-	
+
 				out.flush();
 				out.close();
-	
+
 				if (stream != null) {
 					stream.close();
 				}
@@ -209,7 +214,7 @@ public class ImageResizeServlet extends HttpServlet {
 			ie.printStackTrace();
 		}
 	}
-	
+
 	private Logger getLogger(){
 		return Logger.getLogger(ImageResizeServlet.class.getName());
 	}
@@ -263,7 +268,7 @@ public class ImageResizeServlet extends HttpServlet {
 	private IWMainApplication getApplication() {
 		return IWMainApplication.getDefaultIWMainApplication();
 	}
-	
+
 	public static String thumbsUrl(String imageUrl, Integer width, Integer height) {
 		return "/thumbsCreator/?image_url=" + imageUrl + "&width=" + width + "&height=" + height;
 	}
