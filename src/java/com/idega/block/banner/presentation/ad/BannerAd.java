@@ -14,7 +14,7 @@ import com.idega.block.banner.BannerConstants;
 import com.idega.block.banner.business.AddBean;
 import com.idega.block.banner.data.Ad;
 import com.idega.block.banner.data.AdSpace;
-import com.idega.block.banner.data.dao.GolfAdDao;
+import com.idega.block.banner.data.dao.BannerAdDao;
 import com.idega.block.web2.business.JQuery;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.facelets.ui.FaceletComponent;
@@ -30,7 +30,7 @@ public class BannerAd extends IWBaseComponent {
 	private String category;
 	
 	@Autowired
-	private GolfAdDao dao;
+	private BannerAdDao dao;
 
 	@Autowired
 	private Web2Business web2Business;
@@ -119,7 +119,7 @@ public class BannerAd extends IWBaseComponent {
 		}
 	}
 	
-	private GolfAdDao getDao() {
+	private BannerAdDao getDao() {
 		if (dao == null) {
 			ELUtil.getInstance().autowire(this);
 		}

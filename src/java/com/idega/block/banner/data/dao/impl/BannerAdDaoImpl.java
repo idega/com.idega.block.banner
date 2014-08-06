@@ -1,4 +1,4 @@
-package com.idega.block.banner.data.dao;
+package com.idega.block.banner.data.dao.impl;
 
 
 import java.util.List;
@@ -10,13 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.idega.block.banner.data.Ad;
 import com.idega.block.banner.data.AdSpace;
+import com.idega.block.banner.data.dao.BannerAdDao;
 import com.idega.core.persistence.Param;
 import com.idega.core.persistence.impl.GenericDaoImpl;
 
-@Repository(GolfAdDao.BEAN_NAME)
+@Repository(BannerAdDao.BEAN_NAME)
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 @Transactional(readOnly = true)
-public class GolfAdDaoImpl extends GenericDaoImpl implements GolfAdDao {
+public class BannerAdDaoImpl extends GenericDaoImpl implements BannerAdDao {
 
 	/* Ad spaces */
 	@Override

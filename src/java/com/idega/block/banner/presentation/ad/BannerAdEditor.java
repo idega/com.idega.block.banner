@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.idega.block.banner.BannerConstants;
 import com.idega.block.banner.business.AddBean;
 import com.idega.block.banner.data.AdSpace;
-import com.idega.block.banner.data.dao.GolfAdDao;
+import com.idega.block.banner.data.dao.BannerAdDao;
 import com.idega.block.media.business.MediaBusiness;
 import com.idega.block.web2.business.JQuery;
 import com.idega.builder.bean.AdvancedProperty;
@@ -53,7 +53,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 	private static final int ACTION_DELETE = 3;
 
 	@Autowired
-	private GolfAdDao dao;
+	private BannerAdDao dao;
 	
 	@Autowired
 	private JQuery jQuery;
@@ -196,7 +196,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 		return true;
 	}
 	
-	private GolfAdDao getDao() {
+	private BannerAdDao getDao() {
 		if (dao == null) {
 			ELUtil.getInstance().autowire(this);
 		}
