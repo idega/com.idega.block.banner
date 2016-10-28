@@ -47,7 +47,8 @@ public class ImageResizeServlet extends HttpServlet {
 
 	private static int maxAge = 604800;
 
-	private static Logger LOGGER = Logger.getLogger(ImageResizeServlet.class.getName());
+	private static Logger LOGGER = Logger.getLogger(ImageResizeServlet.class
+			.getName());
 
 	@Autowired
 	private BannerImageResizeService bannerImageResizeService;
@@ -68,16 +69,28 @@ public class ImageResizeServlet extends HttpServlet {
 		if (configMaxAge != null)
 			maxAge = Integer.parseInt(configMaxAge);
 
-		LOGGER.info("[ImageResizeServlet] Using \"" + maxAge + "\" as the cache timeout value");
+		LOGGER.info("[ImageResizeServlet] Using \"" + maxAge
+				+ "\" as the cache timeout value");
 	}
 
-	protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+	private InputStream getStreamFromDatabase(String media) throws Exception {
+		String name = media.substring(media.lastIndexOf("/") + 1);
+		String id = name.substring(0, name.indexOf("_"));
+		GenericDao dao = ELUtil.getInstance().getBean("genericDAO");
+		ICFile file = dao.find(ICFile.class, Integer.valueOf(id));
+		return file.getFileValue().getBinaryStream();
+	}
+
+	protected void processRequest(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException {
+
 		String media = request.getParameter("image_url");
 
 		try {
 			ByteArrayOutputStream byteStream = null;
 
-			Map<String, byte[]> cache = getCache(CACHE_NAME_RESIZED_IMAGE, (60 * 60 * 24));
+			Map<String, byte[]> cache = getCache(CACHE_NAME_RESIZED_IMAGE,
+					(60 * 60 * 24));
 			if (cache != null && !cache.isEmpty()) {
 				if (cache.containsKey(request.getQueryString())) {
 					byte[] bytes = cache.get(request.getQueryString());
@@ -118,39 +131,49 @@ public class ImageResizeServlet extends HttpServlet {
 
 				// Fetch the image
 				if (media.indexOf("http") == -1) {
-					media = request.getScheme() + "://" + request.getServerName() + (request.getServerPort() != 80 ? ":" + request.getServerPort() : "") + media;
+					media = request.getScheme()
+							+ "://"
+							+ request.getServerName()
+							+ (request.getServerPort() != 80 ? ":"
+									+ request.getServerPort() : "") + media;
 				}
 
 				if (imageType == null && media.indexOf(".") != -1) {
 					imageType = media.substring(media.lastIndexOf(".") + 1);
-				}
-				else {
+				} else {
 					imageType = "jpeg";
 				}
 
-				try{
+				try {
 					URL url = new URL(media);
-					HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+					HttpURLConnection connection = (HttpURLConnection) url
+							.openConnection();
 
 					try {
 						stream = connection.getInputStream();
-					}
-					catch (FileNotFoundException fnfe) {
-						System.err.println("[ImageResizeServlet] " + fnfe.getMessage());
+					} catch (FileNotFoundException fnfe) {
+						try {
+							stream = getStreamFromDatabase(media);
+						} catch (Exception e) {
+							throw new IOException(e);
+						}
+						if (stream == null) {
+							System.err.println("[ImageResizeServlet] "
+									+ fnfe.getMessage());
 
-						throw fnfe;
-//						response.sendError(HttpServletResponse.SC_NOT_FOUND, media + " not found...");
-//						return;
+							throw fnfe;
+							// response.sendError(HttpServletResponse.SC_NOT_FOUND,
+							// media + " not found...");
+							// return;
+						}
 					}
-				}catch (Exception e) {
+				} catch (Exception e) {
 					try {
-						getLogger().log(Level.WARNING, "Failed getting file from iw_cache", e);
-						String name = media.substring(media.lastIndexOf("/")+1);
-						String id = name.substring(0, name.indexOf("_"));
-						GenericDao dao = ELUtil.getInstance().getBean("genericDAO");
-						ICFile file = dao.find(ICFile.class, Integer.valueOf(id));
-						System.out.println("id:" + id);
-						stream = file.getFileValue().getBinaryStream();
+						stream = getStreamFromDatabase(media);
+						if (stream == null) {
+							getLogger().log(Level.WARNING,
+									"Failed getting file from iw_cache", e);
+						}
 					} catch (Exception e1) {
 						throw new IOException(e1);
 					}
@@ -165,8 +188,10 @@ public class ImageResizeServlet extends HttpServlet {
 				imageRequest.setSourceImage(image);
 				imageRequest.setTargetHeight(Integer.parseInt(height));
 				imageRequest.setTargetWidth(Integer.parseInt(width));
-				imageRequest.setMaintainAspect(Boolean.parseBoolean(maintainAspect));
-				imageRequest.setCropToAspect(Boolean.parseBoolean(cropToAspect));
+				imageRequest.setMaintainAspect(Boolean
+						.parseBoolean(maintainAspect));
+				imageRequest
+				.setCropToAspect(Boolean.parseBoolean(cropToAspect));
 				imageRequest.setCompressionQuality(Float.parseFloat(quality));
 				imageRequest.setResizeAction(ImageResizeAction.IF_LARGER);
 
@@ -177,7 +202,8 @@ public class ImageResizeServlet extends HttpServlet {
 				ImageIO.write(thumbnail, imageType, byteStream);
 
 				if (cache != null) {
-					cache.put(request.getQueryString(), byteStream.toByteArray());
+					cache.put(request.getQueryString(),
+							byteStream.toByteArray());
 				}
 			}
 
@@ -190,8 +216,10 @@ public class ImageResizeServlet extends HttpServlet {
 				ServletOutputStream out = response.getOutputStream();
 				response.setContentType("image/" + imageType);
 				response.setContentLength(byteStream.size());
-				response.setHeader("Cache-Control", "PUBLIC, max-age=" + maxAge + ", must-revalidate");
-				response.setHeader("Expires", htmlExpiresDateFormat().format(stamp.getDate()));
+				response.setHeader("Cache-Control", "PUBLIC, max-age=" + maxAge
+						+ ", must-revalidate");
+				response.setHeader("Expires",
+						htmlExpiresDateFormat().format(stamp.getDate()));
 
 				String token = '"' + getMd5Digest(byteStream.toByteArray()) + '"';
 				response.setHeader("ETag", token);
@@ -204,28 +232,30 @@ public class ImageResizeServlet extends HttpServlet {
 				if (stream != null) {
 					stream.close();
 				}
+			} catch (FileNotFoundException fnfe) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image "
+						+ media + " not found...");
 			}
-			catch (FileNotFoundException fnfe) {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image " + media + " not found...");
-			}
-		}
-		catch (IOException ie) {
-			System.err.println("[ImageResizeServlet]: " + ie.getMessage() + " (" + media + ")");
+		} catch (IOException ie) {
+			System.err.println("[ImageResizeServlet]: " + ie.getMessage()
+					+ " (" + media + ")");
 			ie.printStackTrace();
 		}
 	}
 
-	private Logger getLogger(){
+	private Logger getLogger() {
 		return Logger.getLogger(ImageResizeServlet.class.getName());
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		processRequest(request, response);
 	}
 
@@ -235,7 +265,8 @@ public class ImageResizeServlet extends HttpServlet {
 	}
 
 	public static DateFormat htmlExpiresDateFormat() {
-		DateFormat httpDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+		DateFormat httpDateFormat = new SimpleDateFormat(
+				"EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 		httpDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		return httpDateFormat;
 	}
@@ -244,8 +275,7 @@ public class ImageResizeServlet extends HttpServlet {
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance("MD5");
-		}
-		catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("MD5 algorithm not available", e);
 		}
 		byte[] messageDigest = md.digest(bytes);
@@ -255,11 +285,16 @@ public class ImageResizeServlet extends HttpServlet {
 		return sb.toString();
 	}
 
-	private <K extends Serializable, V> Map<K, V> getCache(String cacheName, long timeToLive) {
+	private <K extends Serializable, V> Map<K, V> getCache(String cacheName,
+			long timeToLive) {
 		try {
-			return IWCacheManager2.getInstance(getApplication()).getCache(cacheName, IWCacheManager2.DEFAULT_CACHE_SIZE, IWCacheManager2.DEFAULT_OVERFLOW_TO_DISK, IWCacheManager2.DEFAULT_ETERNAL, IWCacheManager2.DEFAULT_CACHE_TTL_IDLE_SECONDS, timeToLive, true);
-		}
-		catch (Exception e) {
+			return IWCacheManager2.getInstance(getApplication()).getCache(
+					cacheName, IWCacheManager2.DEFAULT_CACHE_SIZE,
+					IWCacheManager2.DEFAULT_OVERFLOW_TO_DISK,
+					IWCacheManager2.DEFAULT_ETERNAL,
+					IWCacheManager2.DEFAULT_CACHE_TTL_IDLE_SECONDS, timeToLive,
+					true);
+		} catch (Exception e) {
 			LOGGER.log(Level.WARNING, "Error getting cache!", e);
 		}
 		return null;
@@ -269,7 +304,9 @@ public class ImageResizeServlet extends HttpServlet {
 		return IWMainApplication.getDefaultIWMainApplication();
 	}
 
-	public static String thumbsUrl(String imageUrl, Integer width, Integer height) {
-		return "/thumbsCreator/?image_url=" + imageUrl + "&width=" + width + "&height=" + height;
+	public static String thumbsUrl(String imageUrl, Integer width,
+			Integer height) {
+		return "/thumbsCreator/?image_url=" + imageUrl + "&width=" + width
+				+ "&height=" + height;
 	}
 }
