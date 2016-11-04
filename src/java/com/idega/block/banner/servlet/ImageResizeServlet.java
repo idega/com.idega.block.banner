@@ -36,6 +36,7 @@ import com.idega.core.cache.IWCacheManager2;
 import com.idega.core.file.data.bean.ICFile;
 import com.idega.core.persistence.GenericDao;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
 import com.idega.util.expression.ELUtil;
 
@@ -69,13 +70,12 @@ public class ImageResizeServlet extends HttpServlet {
 		if (configMaxAge != null)
 			maxAge = Integer.parseInt(configMaxAge);
 
-		LOGGER.info("[ImageResizeServlet] Using \"" + maxAge
-				+ "\" as the cache timeout value");
+		LOGGER.info("[ImageResizeServlet] Using \"" + maxAge + "\" as the cache timeout value");
 	}
 
 	private InputStream getStreamFromDatabase(String media) throws Exception {
-		String name = media.substring(media.lastIndexOf("/") + 1);
-		String id = name.substring(0, name.indexOf("_"));
+		String name = media.substring(media.lastIndexOf(CoreConstants.SLASH) + 1);
+		String id = name.substring(0, name.indexOf(CoreConstants.UNDER));
 		GenericDao dao = ELUtil.getInstance().getBean("genericDAO");
 		ICFile file = dao.find(ICFile.class, Integer.valueOf(id));
 		return file.getFileValue().getBinaryStream();
@@ -146,9 +146,7 @@ public class ImageResizeServlet extends HttpServlet {
 
 				try {
 					URL url = new URL(media);
-					HttpURLConnection connection = (HttpURLConnection) url
-							.openConnection();
-
+					HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 					try {
 						stream = connection.getInputStream();
 					} catch (FileNotFoundException fnfe) {
@@ -158,21 +156,15 @@ public class ImageResizeServlet extends HttpServlet {
 							throw new IOException(e);
 						}
 						if (stream == null) {
-							System.err.println("[ImageResizeServlet] "
-									+ fnfe.getMessage());
-
+							getLogger().warning("Error getting " + media);
 							throw fnfe;
-							// response.sendError(HttpServletResponse.SC_NOT_FOUND,
-							// media + " not found...");
-							// return;
 						}
 					}
 				} catch (Exception e) {
 					try {
 						stream = getStreamFromDatabase(media);
 						if (stream == null) {
-							getLogger().log(Level.WARNING,
-									"Failed getting file from iw_cache", e);
+							getLogger().log(Level.WARNING, "Failed getting " + media + " from iw_cache", e);
 						}
 					} catch (Exception e1) {
 						throw new IOException(e1);
@@ -233,13 +225,10 @@ public class ImageResizeServlet extends HttpServlet {
 					stream.close();
 				}
 			} catch (FileNotFoundException fnfe) {
-				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image "
-						+ media + " not found...");
+				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Image " + media + " not found...");
 			}
 		} catch (IOException ie) {
-			System.err.println("[ImageResizeServlet]: " + ie.getMessage()
-					+ " (" + media + ")");
-			ie.printStackTrace();
+			getLogger().log(Level.WARNING, "Error resizing " + media, ie);
 		}
 	}
 
