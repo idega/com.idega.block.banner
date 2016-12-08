@@ -33,8 +33,8 @@ import com.idega.block.banner.bean.ImageResizeAction;
 import com.idega.block.banner.bean.ImageResizeRequest;
 import com.idega.block.banner.business.BannerImageResizeService;
 import com.idega.core.cache.IWCacheManager2;
-import com.idega.core.file.data.bean.ICFile;
-import com.idega.core.persistence.GenericDao;
+import com.idega.core.file.data.ICFileHome;
+import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
@@ -76,9 +76,9 @@ public class ImageResizeServlet extends HttpServlet {
 	private InputStream getStreamFromDatabase(String media) throws Exception {
 		String name = media.substring(media.lastIndexOf(CoreConstants.SLASH) + 1);
 		String id = name.substring(0, name.indexOf(CoreConstants.UNDER));
-		GenericDao dao = ELUtil.getInstance().getBean("genericDAO");
-		ICFile file = dao.find(ICFile.class, Integer.valueOf(id));
-		return file.getFileValue().getBinaryStream();
+		ICFileHome fileHome = (ICFileHome) IDOLookup.getHome(com.idega.core.file.data.ICFile.class);
+		com.idega.core.file.data.ICFile file = fileHome.findByPrimaryKey(id);
+		return file.getFileValue();
 	}
 
 	protected void processRequest(HttpServletRequest request,
