@@ -35,6 +35,7 @@ import com.idega.block.banner.business.BannerImageResizeService;
 import com.idega.core.cache.IWCacheManager2;
 import com.idega.core.file.data.ICFileHome;
 import com.idega.data.IDOLookup;
+import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWMainApplication;
 import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
@@ -61,6 +62,16 @@ public class ImageResizeServlet extends HttpServlet {
 		return bannerImageResizeService;
 	}
 
+	private ICFileHome getICFileHome() {
+		try {
+			return (ICFileHome) IDOLookup.getHome(com.idega.core.file.data.ICFile.class);
+		} catch (IDOLookupException e) {
+			getLogger().log(Level.WARNING, "Failed to get ICFileHome, cause of:", e);
+		}
+
+		return null;
+	}
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -76,8 +87,7 @@ public class ImageResizeServlet extends HttpServlet {
 	private InputStream getStreamFromDatabase(String media) throws Exception {
 		String name = media.substring(media.lastIndexOf(CoreConstants.SLASH) + 1);
 		String id = name.substring(0, name.indexOf(CoreConstants.UNDER));
-		ICFileHome fileHome = (ICFileHome) IDOLookup.getHome(com.idega.core.file.data.ICFile.class);
-		com.idega.core.file.data.ICFile file = fileHome.findByPrimaryKey(id);
+		com.idega.core.file.data.ICFile file = getICFileHome().findByPrimaryKey(id);
 		return file.getFileValue();
 	}
 
