@@ -205,13 +205,13 @@ public class BannerImageResizeService {
       sourceFile = request.getSourceFile();
     } else if (request.getSourceFilePath() != null) {
       sourceFile = new File(request.getSourceFilePath());
-      if (!sourceFile.canRead()) {
-        throw new IOException("Cannot read source image file from provided path.");
-      }
     }
 
     if (sourceFile == null) {
-      throw new IOException("Unable to get a source image file from any of the provided information.");
+      throw new IOException("Unable to get a source image file from any of the provided information: " + request.getSourceFile());
+    }
+    if (!sourceFile.canRead()) {
+        throw new IOException("Cannot read source image file from provided path: " + request.getSourceFilePath());
     }
 
     return ImageIO.read(sourceFile);
