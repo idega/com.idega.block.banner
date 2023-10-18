@@ -15,7 +15,7 @@
 	
 	<servlet-mapping>
 		<servlet-name>ImageResizeServlet</servlet-name>
-		<url-pattern>/thumbsCreator/*</url-pattern>
+		<url-pattern>/bannerThumbsCreator/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>
