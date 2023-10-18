@@ -36,7 +36,7 @@ import com.idega.util.PresentationUtil;
 import com.idega.util.expression.ELUtil;
 
 public class BannerAdEditor extends IWBaseComponent implements IWPageEventListener {
-	
+
 	private static final String PARAMETER_ACTION = "prm_action";
 	private static final String PARAMETER_AD = "prm_ad_id";
 	private static final String PARAMETER_NAME = "prm_name";
@@ -47,14 +47,14 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 	private static final String PARAMETER_IMAGE_URL = "prm_image_url";
 	private static final String PARAMETER_REGION = "prm_region";
 	private static final String PARAMETER_HTML = "prm_html";
-	
+
 	private static final int ACTION_VIEW = 1;
 	private static final int ACTION_EDIT = 2;
 	private static final int ACTION_DELETE = 3;
 
 	@Autowired
 	private BannerAdDao dao;
-	
+
 	@Autowired
 	private JQuery jQuery;
 
@@ -73,7 +73,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 	@Override
 	protected void initializeComponent(FacesContext context) {
 		IWContext iwc = IWContext.getIWContext(context);
-		
+
 		try {
 			if (!hasRights(iwc)) {
 				return;
@@ -82,19 +82,19 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 		catch (Exception se) {
 			se.printStackTrace();
 		}
-		
+
 		IWBundle bundle = iwc.getIWMainApplication().getBundle(BannerConstants.IW_BUNDLE_IDENTIFIER);
-		
+
 		AddBean bean = getBeanInstance("addBean");
 		String category = iwc.getApplicationSettings().getProperty("golf.ad.category", "none");
-		
+
 		FaceletComponent facelet = (FaceletComponent)iwc.getApplication().createComponent(FaceletComponent.COMPONENT_TYPE);
 		switch (parseAction(iwc)) {
 			case ACTION_VIEW:
 				bean.setAds(getDao().getAds(category));
 				facelet.setFaceletURI(bundle.getFaceletURI("ad/view.xhtml"));
 				break;
-	
+
 			case ACTION_EDIT:
 				try {
 					bean.setResponseUrl(getWrapper().getBuilderService(iwc).getCurrentPageURI(iwc));
@@ -108,28 +108,28 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 				if (iwc.isParameterSet(PARAMETER_AD)) {
 					bean.setAd(getDao().getAd(Long.parseLong(iwc.getParameter(PARAMETER_AD))));
 				}
-				
+
 				if (bean.getAd() != null) {
 			        if (bean.getAd().getFlashUrl() != null && bean.getAd().getFlashUrl().length() > 0) {
 						PresentationUtil.addJavaScriptSourceLineToHeader(iwc, getJQuery().getBundleURIToJQueryLib());
 						PresentationUtil.addJavaScriptSourceLineToHeader(iwc, bundle.getVirtualPathWithFileNameString("javascript/jquery.swfobject.min.js"));
 			        }
 				}
-				
-				List<AdvancedProperty> properties = new ArrayList<AdvancedProperty>();
+
+				List<AdvancedProperty> properties = new ArrayList<>();
 				for (BannerAdSpace adSpace : adSpaces) {
 					AdvancedProperty property = new AdvancedProperty(adSpace.getName(), (adSpace.getDescription() != null ? adSpace.getDescription() : "") + " (" + adSpace.getWidth() + "x" + adSpace.getHeight() + ")");
 					if (bean.getAd() != null && bean.getAd().getAdSpaces().contains(adSpace)) {
 						property.setSelected(true);
 					}
-					
+
 					properties.add(property);
 				}
 				bean.setProperties(properties);
-				
+
 				facelet.setFaceletURI(bundle.getFaceletURI("ad/edit.xhtml"));
 				break;
-				
+
 			case ACTION_DELETE:
 				if (iwc.isParameterSet(PARAMETER_AD)) {
 					getDao().removeAd(Long.parseLong(iwc.getParameter(PARAMETER_AD)));
@@ -137,11 +137,11 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 				bean.setAds(getDao().getAds(category));
 				facelet.setFaceletURI(bundle.getFaceletURI("ad/view.xhtml"));
 				break;
-	
+
 		}
 		add(facelet);
 	}
-	
+
 	private int parseAction(IWContext iwc) {
 		int action = iwc.isParameterSet(PARAMETER_ACTION) ? Integer.parseInt(iwc.getParameter(PARAMETER_ACTION)) : ACTION_VIEW;
 		return action;
@@ -157,7 +157,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 		String html = iwc.isParameterSet(PARAMETER_HTML) ? iwc.getParameter(PARAMETER_HTML) : null;
 		String category = iwc.getApplicationSettings().getProperty("golf.ad.category", "none");
 		String[] spaces = iwc.getParameterValues(PARAMETER_REGION);
-		
+
 		try {
 			Map<String, UploadFile> images = FileUploadUtil.getAllUploadedFiles(iwc);
 
@@ -165,7 +165,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 			if (image != null && !image.getRealPath().endsWith("/")) {
 				ICFile icFile = MediaBusiness.saveMediaToDB(image, -1, iwc);
 				if (icFile != null) {
-					imageUrl = ICFileSystemFactory.getFileSystem(iwc).getFileURI(icFile);
+					imageUrl = ICFileSystemFactory.getFileSystem(iwc).getFileURI(iwc, icFile);
 				}
 			}
 
@@ -173,7 +173,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 			if (flash != null && !flash.getRealPath().endsWith("/")) {
 				ICFile icFile = MediaBusiness.saveMediaToDB(flash, -1, iwc);
 				if (icFile != null) {
-					flashUrl = ICFileSystemFactory.getFileSystem(iwc).getFileURI(icFile);
+					flashUrl = ICFileSystemFactory.getFileSystem(iwc).getFileURI(iwc, icFile);
 				}
 			}
 		}
@@ -181,7 +181,7 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 			throw new IBORuntimeException(re);
 		}
 
-		List<BannerAdSpace> adSpaces = new ArrayList<BannerAdSpace>();
+		List<BannerAdSpace> adSpaces = new ArrayList<>();
 		if (spaces != null && spaces.length > 0) {
 			for (String space : spaces) {
 				adSpaces.add(getDao().getAdSpace(space));
@@ -190,33 +190,33 @@ public class BannerAdEditor extends IWBaseComponent implements IWPageEventListen
 		else {
 			adSpaces = null;
 		}
-		
+
 		getDao().storeAd(id, name, url, imageUrl, flashUrl, category, adSpaces,html);
-		
+
 		return true;
 	}
-	
+
 	private BannerAdDao getDao() {
 		if (dao == null) {
 			ELUtil.getInstance().autowire(this);
 		}
-		
+
 		return dao;
 	}
-	
+
 	private JQuery getJQuery() {
 		if (jQuery == null) {
 			ELUtil.getInstance().autowire(this);
 		}
-		
+
 		return jQuery;
 	}
-	
+
 	private BuilderLogicWrapper getWrapper() {
 		if (wrapper == null) {
 			ELUtil.getInstance().autowire(this);
 		}
-		
+
 		return wrapper;
 	}
 }

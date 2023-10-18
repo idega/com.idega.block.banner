@@ -37,8 +37,10 @@ import com.idega.core.file.data.ICFileHome;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.idegaweb.IWMainApplication;
+import com.idega.io.DownloadWriter;
 import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
+import com.idega.util.StringUtil;
 import com.idega.util.expression.ELUtil;
 
 public class ImageResizeServlet extends HttpServlet {
@@ -84,10 +86,18 @@ public class ImageResizeServlet extends HttpServlet {
 		LOGGER.info("[ImageResizeServlet] Using \"" + maxAge + "\" as the cache timeout value");
 	}
 
-	private InputStream getStreamFromDatabase(String media) throws Exception {
+	private InputStream getStreamFromDatabase(String media, String token) throws Exception {
+		if (StringUtil.isEmpty(media) || StringUtil.isEmpty(token)) {
+			return null;
+		}
+
 		String name = media.substring(media.lastIndexOf(CoreConstants.SLASH) + 1);
 		String id = name.substring(0, name.indexOf(CoreConstants.UNDER));
-		com.idega.core.file.data.ICFile file = getICFileHome().findByPrimaryKey(id);
+		com.idega.core.file.data.ICFile file = getICFileHome().findByUUID(id);
+		if (file == null || !token.equals(file.getToken())) {
+			return null;
+		}
+
 		return file.getFileValue();
 	}
 
@@ -95,6 +105,7 @@ public class ImageResizeServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException {
 
 		String media = request.getParameter("image_url");
+		String fileToken = request.getParameter(DownloadWriter.PRM_FILE_TOKEN);
 
 		try {
 			ByteArrayOutputStream byteStream = null;
@@ -161,7 +172,7 @@ public class ImageResizeServlet extends HttpServlet {
 						stream = connection.getInputStream();
 					} catch (FileNotFoundException fnfe) {
 						try {
-							stream = getStreamFromDatabase(media);
+							stream = getStreamFromDatabase(media, fileToken);
 						} catch (Exception e) {
 							throw new IOException(e);
 						}
@@ -172,7 +183,7 @@ public class ImageResizeServlet extends HttpServlet {
 					}
 				} catch (Exception e) {
 					try {
-						stream = getStreamFromDatabase(media);
+						stream = getStreamFromDatabase(media, fileToken);
 						if (stream == null) {
 							getLogger().log(Level.WARNING, "Failed getting " + media + " from iw_cache", e);
 						}
