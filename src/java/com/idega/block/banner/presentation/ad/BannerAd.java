@@ -16,9 +16,11 @@ import com.idega.block.banner.data.dao.BannerAdDao;
 import com.idega.block.web2.business.JQuery;
 import com.idega.block.web2.business.Web2Business;
 import com.idega.facelets.ui.FaceletComponent;
+import com.idega.idegaweb.DefaultIWBundle;
 import com.idega.idegaweb.IWBundle;
 import com.idega.presentation.IWBaseComponent;
 import com.idega.presentation.IWContext;
+import com.idega.util.CoreConstants;
 import com.idega.util.PresentationUtil;
 import com.idega.util.expression.ELUtil;
 
@@ -63,6 +65,9 @@ public class BannerAd extends IWBaseComponent {
 							else {
 								cookie = new Cookie("golf.ad.popup." + space.getName() + "." + bean.getAd().getId().toString(), Boolean.TRUE.toString());
 								cookie.setMaxAge(60 * 60 * 24);
+								cookie.setHttpOnly(true);
+						        cookie.setSecure(DefaultIWBundle.isProductionEnvironment());
+						        cookie.setPath(CoreConstants.SLASH);
 								iwc.addCookies(cookie);
 							}
 						}
@@ -93,7 +98,7 @@ public class BannerAd extends IWBaseComponent {
 		else if (getCategory() != null) {
 			List<com.idega.block.banner.data.BannerAd> ads = getDao().getAds(category);
 			if (ads == null) {
-				ads = new ArrayList<com.idega.block.banner.data.BannerAd>();
+				ads = new ArrayList<>();
 			}
 
 			Long defaultAd = Long.parseLong(iwc.getApplicationSettings().getProperty("golf.default.club.ad", "-1"));
